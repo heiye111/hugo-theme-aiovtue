@@ -1758,8 +1758,60 @@ html.dark .notice-board-wrap__notice { border-color: var(--sakura-color-divider)
   min-height: var(--sakura-post-card-height);
   border: 1px solid rgba(0,0,0,.85); border-radius: var(--sakura-post-card-rd);
   background: var(--sakura-post-card-bg); transition: transform .3s, border-color .3s;
+
+  &.is-pinned,
+  &:has(.sakura-post-pin) {
+    border-color: color-mix(in srgb, var(--sakura-color-primary) 55%, rgba(0, 0, 0, 0.85));
+  }
 }
-html.dark .sakura-post-card { border-color: var(--sakura-color-divider); }
+html.dark .sakura-post-card {
+  border-color: var(--sakura-color-divider);
+
+  &:has(.sakura-post-pin) {
+    border-color: color-mix(in srgb, var(--sakura-color-primary) 45%, var(--sakura-color-divider));
+  }
+}
+
+.sakura-post-pin {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--sakura-color-primary);
+  vertical-align: middle;
+  transform: rotate(-24deg);
+
+  iconify-icon {
+    font-size: 1em;
+  }
+}
+
+.sakura-post-card > .sakura-post-pin {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  z-index: 2;
+  margin: 0;
+  width: auto;
+  height: auto;
+  background: none;
+  box-shadow: none;
+  pointer-events: none;
+
+  iconify-icon {
+    font-size: 18px;
+  }
+}
+
+.home-timeline-card__title .sakura-post-pin,
+.sakura-timeline__item .sakura-post-pin {
+  margin-right: 0.25em;
+  transform: rotate(-24deg);
+}
+
+.home-timeline-item.is-pinned .home-timeline-item__inner {
+  border-color: color-mix(in srgb, var(--sakura-color-primary) 40%, var(--sakura-color-divider));
+}
 .sakura-post-card:hover { transform: scale(1.01); border-color: var(--sakura-color-primary); }
 .sakura-post-card.left { flex-direction: row-reverse; }
 .sakura-post-card.right { text-align: right; }

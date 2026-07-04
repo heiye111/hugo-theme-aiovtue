@@ -2,11 +2,14 @@
 {{ $pos := mod (.Index | default 0) 2 }}
 {{ $showDate := $page.Lastmod }}
 {{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
-<li class="home-timeline-item {{ if eq $pos 0 }}is-left{{ else }}is-right{{ end }}">
+<li class="home-timeline-item {{ if eq $pos 0 }}is-left{{ else }}is-right{{ end }}{{ if $page.Params.pinned }} is-pinned{{ end }}">
   <div class="home-timeline-item__inner">
     <div class="home-timeline-item__content">
       <a class="home-timeline-card__link" href="{{ $page.RelPermalink }}" aria-label="阅读全文：{{ $page.Title }}">
-        <h2 class="home-timeline-card__title">{{ $page.Title }}</h2>
+        <h2 class="home-timeline-card__title">
+          {{- partial "post-pinned-badge.html" $page -}}
+          {{ $page.Title }}
+        </h2>
         <p class="home-timeline-card__excerpt">{{ $page.Description | default $page.Summary | plainify | truncate 160 }}</p>
       </a>
     </div>

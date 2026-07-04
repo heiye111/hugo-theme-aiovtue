@@ -1,5 +1,5 @@
 {{- $posts := where .Site.RegularPages "Section" "posts" -}}
-{{- $posts = sort $posts "Date" "desc" -}}
+{{- $posts = partial "posts-sorted.html" (dict "Pages" $posts) -}}
 {{- if gt (len $posts) 0 -}}
 {{- $data := slice -}}
 {{- range $posts -}}

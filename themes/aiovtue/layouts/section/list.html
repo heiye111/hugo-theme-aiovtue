@@ -3,7 +3,8 @@
   {{- partial "page-header.html" . -}}
   <div class="sakura-page-content">
     <div class="post-list-container">
-      {{ range $index, $page := .Pages.ByDate.Reverse }}
+      {{ $pages := partial "posts-sorted.html" (dict "Pages" .Pages) }}
+      {{ range $index, $page := $pages }}
         {{- partial "post-card.html" (dict "Page" $page "Site" $.Site "Index" $index) -}}
       {{ end }}
     </div>

@@ -2,7 +2,7 @@
 {{ $layout := .Site.Params.home.layout | default "cards" }}
 {{ if not (in (slice "cards" "timeline") $layout) }}{{ $layout = "cards" }}{{ end }}
 {{ $posts := where .Site.RegularPages "Section" "in" (slice "posts" "excalidraw") }}
-{{ $posts = sort $posts "Date" "desc" }}
+{{ $posts = partial "posts-sorted.html" (dict "Pages" $posts) }}
 <section class="sakura-home">
   {{- partial "hero.html" . -}}
   <div class="sakura-home-layout is-layout-{{ $layout }}" id="home-posts" data-home-layout="{{ $layout }}">

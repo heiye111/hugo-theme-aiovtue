@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ $posts := where .Site.RegularPages "Section" "in" (slice "posts" "excalidraw") }}
-{{ $posts = sort $posts "Date" "desc" }}
+{{ $posts = partial "posts-sorted.html" (dict "Pages" $posts) }}
 {{ $limit := .Site.Params.charts.tagsChartLength | default 10 }}
 {{ $homeLayout := .Site.Params.home.layout | default "cards" }}
 {{ if not (in (slice "cards" "timeline") $homeLayout) }}{{ $homeLayout = "cards" }}{{ end }}

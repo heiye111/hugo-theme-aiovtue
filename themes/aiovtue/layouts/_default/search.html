@@ -1,5 +1,6 @@
 {{ define "main" }}
 {{- $pages := where .Site.RegularPages "Section" "in" (slice "posts" "excalidraw") -}}
+{{- $pages = partial "posts-sorted.html" (dict "Pages" $pages) -}}
 {{- $items := slice -}}
 {{- range $p := $pages -}}
   {{- $items = $items | append (dict
