@@ -1,5 +1,6 @@
+{{ $layout := default "preview" site.Params.links.layout }}
 {{ $data := hugo.Data.links }}
-<div class="links-preview">
+<div class="links-preview links-preview--{{ $layout }}" data-shuffle-groups="{{ $data.shuffleGroups | default true }}">
   {{ range $data.linkGroups }}
   <section class="links-preview-group">
     <header class="links-preview-group__header">
@@ -8,10 +9,23 @@
     </header>
     <ul class="links-preview-grid">
       {{ range .links }}
-      <li class="links-preview-item" style="--link-color: {{ .color | default `#0078e7` }}">
+      {{ $siteshot := .siteshot | default (printf `https://s0.wp.com/mshots/v1/%s?w=800&h=450` (.url | urlquery)) }}
+      <li class="links-preview-item" style="--link-color: {{ .color | default `#0078e7` }}"{{ with .pinLast }} data-pin-last="true"{{ end }}>
+        {{ if eq $layout "simple" }}
+        <a class="links-preview-card links-preview-card--simple" href="{{ .url }}" target="_blank" rel="friend noopener">
+          <img class="sakura-lazy-img links-preview-avatar" src="{{ .avatar }}" alt="{{ .name }}" loading="lazy" decoding="async">
+          <div class="links-preview-text">
+            <div class="links-preview-name">{{ .blog | default .name }}</div>
+            <div class="links-preview-desc">{{ .desc }}</div>
+          </div>
+          <div class="links-preview-hover-shot" aria-hidden="true">
+            <img class="sakura-lazy-img" src="{{ $siteshot }}" alt="" loading="lazy" decoding="async">
+          </div>
+        </a>
+        {{ else }}
         <a class="links-preview-card" href="{{ .url }}" target="_blank" rel="friend noopener">
           <div class="links-preview-shot">
-            <img class="sakura-lazy-img" src="{{ .siteshot | default (printf `https://s0.wp.com/mshots/v1/%s?w=800&h=450` (.url | urlquery)) }}" alt="{{ .name }}" loading="lazy" decoding="async">
+            <img class="sakura-lazy-img" src="{{ $siteshot }}" alt="{{ .name }}" loading="lazy" decoding="async">
           </div>
           <div class="links-preview-meta">
             <img class="sakura-lazy-img links-preview-avatar" src="{{ .avatar }}" alt="{{ .name }}" loading="lazy" decoding="async">
@@ -21,6 +35,7 @@
             </div>
           </div>
         </a>
+        {{ end }}
       </li>
       {{ end }}
     </ul>

@@ -1,8 +1,12 @@
 {{ define "main" }}
-<article class="sakura-page sakura-links-page">
+{{ $layout := default "preview" site.Params.links.layout }}
+<article class="sakura-page sakura-links-page sakura-links-page--{{ $layout }}">
   {{- partial "page-header.html" . -}}
   <div class="sakura-links-main">
     <div class="content sakura-page-content">
+      {{- if partial "links-rss-enabled.html" . -}}
+      {{- partial "links-rss-spotlight.html" . -}}
+      {{- end -}}
       {{- partial "links-preview.html" . -}}
       <div class="friend-notice-bottom">
         {{- partial "friend-link-notice.html" . -}}

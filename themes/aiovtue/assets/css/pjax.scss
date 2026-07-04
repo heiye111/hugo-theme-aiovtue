@@ -1,0 +1,29 @@
+#content {
+  transition: opacity 0.2s ease;
+
+  &.is-pjax-leaving {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.is-pjax-entering,
+  &.is-pjax-preparing {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #content.is-pjax-leaving,
+  #content.is-pjax-entering,
+  #content.is-pjax-preparing {
+    transition: none;
+  }
+
+  #content.is-pjax-leaving,
+  #content.is-pjax-entering,
+  #content.is-pjax-preparing {
+    opacity: 0;
+    pointer-events: none;
+  }
+}

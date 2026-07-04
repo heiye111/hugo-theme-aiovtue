@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ site.Language.Lang | default `zh` }}" class="{{ if .IsHome }}is-home has-home-layout{{ else if eq .Kind `404` }}has-404-layout{{ end }}">
+<html lang="{{ site.Language.Lang | default `zh` }}" class="{{ if .IsHome }}is-home has-home-layout{{ else if eq .Kind `404` }}has-404-layout{{ end }}"{{- with site.Params.search -}}{{- if .enable -}} data-search-threshold="{{ default 0.35 .threshold }}"{{- end -}}{{- end -}}>
 <head>
   {{- partial "head.html" . -}}
 </head>
@@ -11,6 +11,8 @@
   </div>
   {{- partial "footer.html" . -}}
   {{- partial "search-modal.html" . -}}
+  {{- partial "music-player.html" . -}}
+  {{- partial "live2d-widget.html" . -}}
   {{- partial "scripts.html" . -}}
 </body>
 </html>

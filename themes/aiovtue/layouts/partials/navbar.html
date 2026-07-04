@@ -1,4 +1,14 @@
-<header class="sakura-navbar" id="navbar">
+{{- $mc := default dict site.Params.navbar.mobileCollapse -}}
+<header
+  class="sakura-navbar"
+  id="navbar"
+  {{- if $mc.enable }}
+  data-mobile-collapse="1"
+  data-scroll-threshold="{{ default 48 $mc.scrollThreshold }}"
+  data-scroll-delta="{{ default 8 $mc.scrollDelta }}"
+  data-reveal-mode="{{ default `scrollUp` $mc.revealMode }}"
+  {{- end }}
+>
   <div class="navbar-content sakura-safe-padding" id="navbar-content">
     <div class="sakura-navbar__brand-wrap">
       <button type="button" class="mobile-btn sakura-navbar__menu-btn" id="sidebar-toggle" aria-label="mobile navigation" aria-expanded="false">

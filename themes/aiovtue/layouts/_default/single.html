@@ -7,9 +7,8 @@
     <aside class="sakura-post-aside-left" aria-hidden="true"></aside>
     <div class="sakura-post-main">
       <div class="sakura-page-content sakura-post-body">
-        <div class="markdown-body prose sakura-post-content">
-          {{ .Content }}
-        </div>
+        {{- partial "post-ai-summary.html" . -}}
+        {{- partial "post-content.html" . -}}
         {{- partial "sponsor.html" . -}}
         {{- partial "post-copyright.html" . -}}
         <div class="sakura-post-nav-before-comment">

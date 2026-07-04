@@ -47,7 +47,7 @@
       </div>
       <div class="notice-board-wrap__cover-frame">
         <div class="notice-board-wrap__cover">
-          <img class="sakura-lazy-img" src="{{ index $first "cover" }}" alt="{{ index $first "title" }}" loading="eager" fetchpriority="high" decoding="async">
+          {{- partial "cover-list-media.html" (dict "cover" (index $first "cover") "title" (index $first "title") "class" "sakura-lazy-img" "loading" "eager") -}}
         </div>
       </div>
     </div>

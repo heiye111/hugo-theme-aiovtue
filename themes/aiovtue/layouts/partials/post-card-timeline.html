@@ -1,0 +1,19 @@
+{{ $page := .Page }}
+{{ $pos := mod (.Index | default 0) 2 }}
+{{ $showDate := $page.Lastmod }}
+{{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
+<li class="home-timeline-item {{ if eq $pos 0 }}is-left{{ else }}is-right{{ end }}">
+  <div class="home-timeline-item__inner">
+    <div class="home-timeline-item__content">
+      <a class="home-timeline-card__link" href="{{ $page.RelPermalink }}" aria-label="阅读全文：{{ $page.Title }}">
+        <h2 class="home-timeline-card__title">{{ $page.Title }}</h2>
+        <p class="home-timeline-card__excerpt">{{ $page.Description | default $page.Summary | plainify | truncate 160 }}</p>
+      </a>
+    </div>
+    <time class="home-timeline-card__date" datetime="{{ $showDate.Format `2006-01-02` }}" title="编辑于{{ $showDate.Format `2006-01-02` }}">
+      <span class="home-timeline-card__date-year">{{ $showDate.Format `2006` }}</span>
+      <span class="home-timeline-card__date-md">{{ $showDate.Format `01-02` }}</span>
+    </time>
+  </div>
+  <span class="home-timeline-item__dot" aria-hidden="true"></span>
+</li>

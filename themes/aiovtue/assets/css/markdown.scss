@@ -1,5 +1,5 @@
 /* Valaxy typography base (.prose) */
-.prose{color:var(--sakura-color-text);max-width:var(--prose-max-width);font-size:1rem;line-height:1.75}.prose [class~=lead]{color:#4b5563;margin-top:1.2em;margin-bottom:1.2em;font-size:1.25em;line-height:1.6}.prose a{color:var(--sakura-text-deeper);font-weight:500;text-decoration:none}.prose strong{color:var(--sakura-color-text-deep);font-weight:600}.prose ol[type=A]{--list-counter-style:upper-alpha}.prose ol[type=a]{--list-counter-style:lower-alpha}.prose ol[type=A\ s]{--list-counter-style:upper-alpha}.prose ol[type=a\ s]{--list-counter-style:lower-alpha}.prose ol[type=I]{--list-counter-style:upper-roman}.prose ol[type=i]{--list-counter-style:lower-roman}.prose ol[type=I\ s]{--list-counter-style:upper-roman}.prose ol[type=i\ s]{--list-counter-style:lower-roman}.prose ol[type="1"]{--list-counter-style:decimal}.prose ol>li{padding-left:1.75em;position:relative}.prose ol>li:before{content:counter(list-item, var(--list-counter-style,decimal)) ".";color:#6b7280;font-weight:400;position:absolute;left:0}.prose hr{border-color:#7d7d7d4d;margin-top:3em;margin-bottom:3em}.prose blockquote{color:inherit;quotes:"“" "”" "‘" "’";border-color:#7d7d7d4d;border-left-width:.25rem;margin-top:1.6em;margin-bottom:1.6em;padding-left:1em;font-style:italic;font-weight:500}.prose blockquote p:first-of-type:before{content:open-quote}.prose blockquote p:last-of-type:after{content:close-quote}.prose h1{color:var(--sakura-color-text-deep);margin-top:0;margin-bottom:.888889em;font-size:2.25em;font-weight:800;line-height:1.11111}.prose h2{color:var(--sakura-color-text-deep);margin-top:2em;margin-bottom:1em;font-size:1.5em;font-weight:700;line-height:1.33333}.prose h3{color:inherit;opacity:.7;margin-top:1.6em;margin-bottom:.6em;font-size:1.25em;font-weight:600;line-height:1.6}.prose h4{color:inherit;margin-top:1.5em;margin-bottom:.5em;font-weight:600;line-height:1.5}.prose figure figcaption{color:#6b7280;margin-top:.857143em;font-size:.875em;line-height:1.42857}.prose code{color:var(--sakura-color-text-deep);font-size:.875em;font-weight:600}.prose code:before,.prose code:after{content:"`"}.prose a code{color:#111827}.prose pre{color:#e5e7eb;border-radius:.375rem;margin-top:1.71429em;margin-bottom:1.71429em;padding:.857143em 1.14286em;font-size:.875em;line-height:1.71429;overflow-x:auto}.prose pre code{color:inherit;font-weight:400;font-size:inherit;font-family:inherit;line-height:inherit;background-color:#0000;border-width:0;border-radius:0;padding:0}.prose pre code:before,.prose pre code:after{content:none}.prose table{table-layout:auto;text-align:left;width:100%;margin-top:2em;margin-bottom:2em;font-size:.875em;line-height:1.71429}.prose thead{color:var(--sakura-color-text-deep);border-bottom-width:1px;border-bottom-color:#8882;font-weight:600}.prose thead th{vertical-align:bottom;padding-bottom:.571429em;padding-left:.571429em;padding-right:.571429em}.prose tbody tr{border-bottom-width:1px;border-bottom-color:#8882}.prose tbody tr:last-child{border-bottom-width:0}.prose tbody td{vertical-align:top;padding:.571429em}.prose p{margin-top:1.25em;margin-bottom:1.25em}.prose img,.prose video,.prose figure{margin-top:2em;margin-bottom:2em}.prose figure>*{margin-top:0;margin-bottom:0}.prose h2 code{font-size:.875em}.prose h3 code{font-size:.9em}.prose ol,.prose ul{margin-top:1.25em;margin-bottom:1.25em;list-style-type:none}.prose li{margin-top:.5em;margin-bottom:.5em}.prose>ul>li p{margin-top:.75em;margin-bottom:.75em}.prose>ol>li>:first-child{margin-top:1.25em}.prose>ol>li>:last-child{margin-bottom:1.25em}.prose ul ul,.prose ul ol,.prose ol ul,.prose ol ol{margin-top:.75em;margin-bottom:.75em}.prose hr+*,.prose h2+*,.prose h3+*,.prose h4+*{margin-top:0}.prose h6{text-transform:uppercase;opacity:.5;letter-spacing:2px;margin-top:20px;margin-bottom:10px;font-weight:500}.prose thead th:first-child{padding-left:0}.prose thead th:last-child{padding-right:0}.prose tbody td:first-child{padding-left:0}.prose tbody td:last-child{padding-right:0}.prose>:first-child{margin-top:0}.prose>:last-child{margin-bottom:0}.prose b{color:var(--sakura-color-text-deep)}.prose em{color:inherit}
+.prose{color:var(--sakura-color-text);max-width:var(--prose-max-width);font-size:1rem;line-height:1.75}.prose [class~=lead]{color:#4b5563;margin-top:1.2em;margin-bottom:1.2em;font-size:1.25em;line-height:1.6}.prose a{color:var(--sakura-text-deeper);font-weight:500;text-decoration:none}.prose strong{color:var(--sakura-color-text-deep);font-weight:600}.prose ol[type=A]{--list-counter-style:upper-alpha}.prose ol[type=a]{--list-counter-style:lower-alpha}.prose ol[type=A\ s]{--list-counter-style:upper-alpha}.prose ol[type=a\ s]{--list-counter-style:lower-alpha}.prose ol[type=I]{--list-counter-style:upper-roman}.prose ol[type=i]{--list-counter-style:lower-roman}.prose ol[type=I\ s]{--list-counter-style:upper-roman}.prose ol[type=i\ s]{--list-counter-style:lower-roman}.prose ol[type="1"]{--list-counter-style:decimal}.prose ol>li{padding-left:1.75em;position:relative}.prose ol>li:before{content:counter(list-item, var(--list-counter-style,decimal)) ".";color:#6b7280;font-weight:400;position:absolute;left:0}.prose hr{border-color:transparent;border-top-width:0;margin-top:3em;margin-bottom:3em}.prose blockquote{color:inherit;quotes:"“" "”" "‘" "’";border-color:#7d7d7d4d;border-left-width:.25rem;margin-top:1.6em;margin-bottom:1.6em;padding-left:1em;font-style:italic;font-weight:500}.prose blockquote p:first-of-type:before{content:open-quote}.prose blockquote p:last-of-type:after{content:close-quote}.prose h1{color:var(--sakura-color-text-deep);margin-top:0;margin-bottom:.888889em;font-size:2.25em;font-weight:800;line-height:1.11111}.prose h2{color:var(--sakura-color-text-deep);margin-top:2em;margin-bottom:1em;font-size:1.5em;font-weight:700;line-height:1.33333}.prose h3{color:inherit;opacity:.7;margin-top:1.6em;margin-bottom:.6em;font-size:1.25em;font-weight:600;line-height:1.6}.prose h4{color:inherit;margin-top:1.5em;margin-bottom:.5em;font-weight:600;line-height:1.5}.prose figure figcaption{color:#6b7280;margin-top:.857143em;font-size:.875em;line-height:1.42857}.prose code{color:var(--sakura-color-text-deep);font-size:.875em;font-weight:600}.prose code:before,.prose code:after{content:"`"}.prose a code{color:#111827}.prose pre{color:#e5e7eb;border-radius:.375rem;margin-top:1.71429em;margin-bottom:1.71429em;padding:.857143em 1.14286em;font-size:.875em;line-height:1.71429;overflow-x:auto}.prose pre code{color:inherit;font-weight:400;font-size:inherit;font-family:inherit;line-height:inherit;background-color:#0000;border-width:0;border-radius:0;padding:0}.prose pre code:before,.prose pre code:after{content:none}.prose table{table-layout:auto;text-align:left;width:100%;margin-top:2em;margin-bottom:2em;font-size:.875em;line-height:1.71429}.prose thead{color:var(--sakura-color-text-deep);border-bottom-width:1px;border-bottom-color:#8882;font-weight:600}.prose thead th{vertical-align:bottom;padding-bottom:.571429em;padding-left:.571429em;padding-right:.571429em}.prose tbody tr{border-bottom-width:1px;border-bottom-color:#8882}.prose tbody tr:last-child{border-bottom-width:0}.prose tbody td{vertical-align:top;padding:.571429em}.prose p{margin-top:1.25em;margin-bottom:1.25em}.prose img,.prose video,.prose figure{margin-top:2em;margin-bottom:2em}.prose figure>*{margin-top:0;margin-bottom:0}.prose h2 code{font-size:.875em}.prose h3 code{font-size:.9em}.prose ol,.prose ul{margin-top:1.25em;margin-bottom:1.25em;list-style-type:none}.prose li{margin-top:.5em;margin-bottom:.5em}.prose>ul>li p{margin-top:.75em;margin-bottom:.75em}.prose>ol>li>:first-child{margin-top:1.25em}.prose>ol>li>:last-child{margin-bottom:1.25em}.prose ul ul,.prose ul ol,.prose ol ul,.prose ol ol{margin-top:.75em;margin-bottom:.75em}.prose hr+*,.prose h2+*,.prose h3+*,.prose h4+*{margin-top:0}.prose h6{text-transform:uppercase;opacity:.5;letter-spacing:2px;margin-top:20px;margin-bottom:10px;font-weight:500}.prose thead th:first-child{padding-left:0}.prose thead th:last-child{padding-right:0}.prose tbody td:first-child{padding-left:0}.prose tbody td:last-child{padding-right:0}.prose>:first-child{margin-top:0}.prose>:last-child{margin-bottom:0}.prose b{color:var(--sakura-color-text-deep)}.prose em{color:inherit}
 
 :root {
   --prose-max-width: none;
@@ -35,6 +35,10 @@ html.dark {
   );
 
   .markdown-body.prose img {
+    border-color: rgba(255, 255, 255, 0.22);
+  }
+
+  .markdown-body.prose video.sakura-markdown-video {
     border-color: rgba(255, 255, 255, 0.22);
   }
 
@@ -247,7 +251,37 @@ html.dark {
   }
 }
 
+@mixin sakura-content-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--sakura-content-scrollbar-thumb) transparent;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+
+  &::-webkit-scrollbar {
+    height: var(--sakura-content-scrollbar-size);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--sakura-content-scrollbar-thumb);
+    border-radius: 999px;
+    transition: background 0.2s ease;
+  }
+
+  &:hover::-webkit-scrollbar-thumb,
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--sakura-content-scrollbar-thumb-active);
+  }
+}
+
 /* Sakura 文章 Markdown：对齐 Valaxy 原站 */
+.sakura-post .markdown-body.prose {
+  font-size: var(--sakura-post-font-size, 1rem);
+}
+
 .markdown-body.prose {
   max-width: none;
   font-family: var(--va-font-serif);
@@ -333,7 +367,7 @@ html.dark {
 
   p {
     color: var(--sakura-color-text);
-    line-height: 30px;
+    line-height: 1.875;
   }
 
   strong,
@@ -477,24 +511,26 @@ html.dark {
   }
 
   hr {
-    text-align: center;
-    background: transparent;
-    border: 0;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    border: none;
+    background: none;
+    height: auto;
+    margin: 40px 0;
+    padding: 0;
     display: block;
+    overflow: visible;
+    text-align: center;
 
     &::before {
       content: "........................";
       color: var(--sakura-color-primary);
       letter-spacing: 0.45em;
-      margin-left: 0.45em;
       font-size: 28px;
+      line-height: 1;
       display: inline-block;
-      position: relative;
-      top: -30px;
-      max-width: 92%;
+      max-width: 100%;
       overflow: hidden;
+      white-space: nowrap;
+      vertical-align: middle;
     }
   }
 
@@ -521,11 +557,63 @@ html.dark {
     border: none;
   }
 
-  img {
+  img,
+  video.sakura-markdown-video {
     cursor: zoom-in;
     border-radius: 8px;
     border: 1px solid #dcdcdc;
     box-sizing: border-box;
+    background: var(--sakura-color-background);
+  }
+
+  img.sakura-lazy-img {
+    background: var(--sakura-color-background);
+  }
+
+  video.sakura-markdown-video {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    cursor: default;
+    background: #000;
+  }
+
+  .sakura-markdown-media-wrap--video {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+  }
+
+  .sakura-markdown-lightbox-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+
+    &:hover {
+      background: rgba(0, 0, 0, 0.62);
+    }
+  }
+
+  .sakura-markdown-media-wrap--video:hover .sakura-markdown-lightbox-btn,
+  .sakura-markdown-lightbox-btn:focus-visible {
+    opacity: 1;
   }
 
   .post-image-group {
@@ -536,6 +624,7 @@ html.dark {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
+    align-items: stretch;
 
     & + .post-image-row {
       margin-top: 12px;
@@ -550,14 +639,55 @@ html.dark {
     min-width: 0;
   }
 
-  .post-image-row__item img {
-    display: block;
-    width: 100%;
-    height: auto;
-    margin: 0;
+  .post-image-row--single .post-image-row__item {
+    .sakura-markdown-media-wrap--video,
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      margin: 0;
+    }
   }
 
-  /* 行内代码；围栏代码块由 div[class*='language-'] 样式控制 */
+  .post-image-row:not(.post-image-row--single) .post-image-row__item {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 8px;
+    border: 1px solid #dcdcdc;
+    box-sizing: border-box;
+    background: var(--sakura-color-background);
+    position: relative;
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      border: none;
+      border-radius: 0;
+      object-fit: cover;
+    }
+
+    .sakura-markdown-media-wrap--video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      margin: 0;
+
+      video.sakura-markdown-video {
+        display: block;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        object-fit: cover;
+      }
+    }
+  }
+
   > pre {
     color: var(--va-code-block-color);
     background-color: var(--va-code-block-bg);
@@ -567,6 +697,7 @@ html.dark {
     padding: 20px 24px;
     font-size: var(--va-code-font-size);
     line-height: var(--va-code-line-height);
+    @include sakura-content-scrollbar;
 
     code {
       color: inherit;
@@ -604,11 +735,10 @@ html.dark {
     max-width: 100%;
     margin: 1.1em 0;
     overflow-x: auto;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
     border-radius: 8px;
     border: 1px solid color-mix(in srgb, var(--sakura-color-primary) 22%, var(--sakura-color-divider));
     background: color-mix(in srgb, var(--sakura-color-primary) 2%, #fff);
+    @include sakura-content-scrollbar;
   }
 
   .sakura-table-wrap table {
@@ -756,6 +886,15 @@ html.dark {
     h4 { font-size: 1.08em; }
     h5 { font-size: 1em; }
     h6 { font-size: 0.9em; }
+
+    hr {
+      margin: 32px 0;
+
+      &::before {
+        font-size: 22px;
+        letter-spacing: 0.32em;
+      }
+    }
   }
 
   .markdown-body.prose > pre {
@@ -874,6 +1013,7 @@ html.dark .markdown-body div[class*="language-"]::after {
   overflow-y: hidden;
   border-radius: 0;
   flex-grow: 1;
+  @include sakura-content-scrollbar;
 }
 
 .markdown-body [class*="language-"] .highlight {
@@ -1048,4 +1188,60 @@ html.dark .markdown-body div[class*="language-"]::after {
 .markdown-body div[class*='language-'].code-foldable.folded > button.code-block-unfold-btn,
 .markdown-body div[class*='language-'].code-foldable > button.code-block-unfold-btn.is-expanded {
   display: block !important;
+}
+
+/* 正文横向滚动条（公式、表格等共用） */
+.markdown-body {
+  --sakura-content-scrollbar-size: 4px;
+  --sakura-content-scrollbar-thumb: color-mix(in srgb, var(--sakura-color-primary) 34%, transparent);
+  --sakura-content-scrollbar-thumb-active: color-mix(in srgb, var(--sakura-color-primary) 72%, transparent);
+  --sakura-math-block-margin-y: 0.65em;
+  --sakura-math-block-padding-y: 0.1em;
+  --sakura-math-inline-margin-y: 0.12em;
+}
+
+html.dark .markdown-body {
+  --sakura-content-scrollbar-thumb: color-mix(in srgb, var(--sakura-color-primary) 48%, transparent);
+  --sakura-content-scrollbar-thumb-active: color-mix(in srgb, var(--sakura-color-primary) 82%, transparent);
+}
+
+/* MathJax 公式排版（字号由 MathJax chtml.scale 控制，勿对 mjx-container 设 font-size） */
+.markdown-body mjx-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  @include sakura-content-scrollbar;
+}
+
+.markdown-body mjx-container[display="true"] {
+  display: block;
+  margin: var(--sakura-math-block-margin-y) 0;
+  padding: var(--sakura-math-block-padding-y) 0;
+}
+
+.markdown-body mjx-container:not([display="true"]) {
+  margin-block: var(--sakura-math-inline-margin-y);
+}
+
+.markdown-body p:has(> mjx-container[display="true"]:only-child) {
+  margin-top: var(--sakura-math-block-margin-y);
+  margin-bottom: var(--sakura-math-block-margin-y);
+}
+
+.markdown-body p:has(+ mjx-container[display="true"]) {
+  margin-bottom: var(--sakura-math-block-margin-y);
+}
+
+.markdown-body mjx-container[display="true"] + p {
+  margin-top: var(--sakura-math-block-margin-y);
+}
+
+.markdown-body h2 + mjx-container[display="true"],
+.markdown-body h3 + mjx-container[display="true"],
+.markdown-body h4 + mjx-container[display="true"] {
+  margin-top: calc(var(--sakura-math-block-margin-y) * 0.55);
+}
+
+html.dark .markdown-body mjx-container {
+  color: var(--sakura-color-text);
 }

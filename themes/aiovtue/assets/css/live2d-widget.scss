@@ -1,0 +1,22 @@
+#waifu {
+  z-index: 150;
+}
+
+#waifu-toggle {
+  z-index: 151;
+}
+
+html.is-excalidraw-viewport-fullscreen {
+  #waifu,
+  #waifu-toggle {
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 767px) {
+  #waifu,
+  #waifu-toggle {
+    display: none !important;
+  }
+}

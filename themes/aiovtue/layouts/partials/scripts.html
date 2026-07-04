@@ -1,8 +1,5 @@
-<script src="https://cdn.jsdelivr.net/npm/echarts@4.9.0/dist/echarts.min.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js" defer></script>
-{{- $commentProvider := default "waline" site.Params.comment.provider -}}
-{{- if eq $commentProvider "twikoo" -}}
-<script src="https://cdn.jsdelivr.net/npm/twikoo@1.7.12/dist/twikoo.all.min.js" defer></script>
-{{- end -}}
+{{- partial "moments-script.html" . -}}
+{{- partial "excalidraw-script.html" . -}}
+{{- partial "gallery-post-script.html" . -}}
 {{ $js := resources.Get "js/main.js" | js.Build | minify | fingerprint }}
 <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>

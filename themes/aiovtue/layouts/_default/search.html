@@ -1,5 +1,5 @@
 {{ define "main" }}
-{{- $pages := where .Site.RegularPages "Section" "in" (slice "posts") -}}
+{{- $pages := where .Site.RegularPages "Section" "in" (slice "posts" "excalidraw") -}}
 {{- $items := slice -}}
 {{- range $p := $pages -}}
   {{- $items = $items | append (dict
@@ -10,7 +10,6 @@
     "tags" ($p.Params.tags | default (slice))
     "categories" ($p.Params.categories | default (slice))
     "excerpt" (($p.Description | default $p.Summary) | plainify)
-    "content" $p.Plain
   ) -}}
 {{- end -}}
 <article class="sakura-page sakura-search-page">
@@ -26,8 +25,4 @@
   </div>
   <script type="application/json" id="search-index-data">{{ $items | jsonify | safeJS }}</script>
 </article>
-{{ end }}
-
-{{ define "head-extra" }}
-<script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
 {{ end }}

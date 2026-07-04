@@ -1,0 +1,37 @@
+{{ $pages := .Pages }}
+{{ $itemClass := .ItemClass | default "" }}
+{{ $filterKey := .FilterKey | default "" }}
+{{ $hidden := .Hidden | default false }}
+<div class="sakura-timeline"{{ with .Id }} id="{{ . }}"{{ end }}>
+  {{ range ($pages.GroupByDate "2006") }}
+  <section class="sakura-timeline__year" data-year="{{ .Key }}">
+    <h2>{{ .Key }}</h2>
+    {{ range .Pages.ByDate.Reverse }}
+    {{ $filterVal := slice }}
+    {{ if eq $filterKey "categories" }}
+      {{ range (.GetTerms "categories") }}
+        {{ $filterVal = $filterVal | append .Data.Term }}
+      {{ end }}
+      {{ if not $filterVal }}
+        {{ $filterVal = .Params.categories | default slice }}
+      {{ end }}
+    {{ else if eq $filterKey "tags" }}
+      {{ range (.GetTerms "tags") }}
+        {{ $filterVal = $filterVal | append .Data.Term }}
+      {{ end }}
+      {{ if not $filterVal }}
+        {{ $filterVal = .Params.tags | default slice }}
+      {{ end }}
+    {{ end }}
+    <div
+      class="{{ with $itemClass }}{{ $itemClass }} {{ end }}sakura-timeline__item"
+      {{ if $filterKey }}data-{{ $filterKey }}='{{ $filterVal | jsonify }}'{{ end }}
+      {{ if $hidden }}hidden{{ end }}
+    >
+      <time datetime="{{ .Date.Format `2006-01-02` }}">{{ .Date.Format `01-02` }}</time>
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </div>
+    {{ end }}
+  </section>
+  {{ end }}
+</div>

@@ -1,7 +1,10 @@
 {{ define "main" }}
-{{ $posts := where .Site.RegularPages "Section" "posts" }}
+{{ $posts := where .Site.RegularPages "Section" "in" (slice "posts" "excalidraw") }}
 {{ $posts = sort $posts "Date" "desc" }}
-<article class="sakura-page sakura-taxonomy-page sakura-categories-page">
+{{ $homeLayout := .Site.Params.home.layout | default "cards" }}
+{{ if not (in (slice "cards" "timeline") $homeLayout) }}{{ $homeLayout = "cards" }}{{ end }}
+{{ $listArchives := eq $homeLayout "timeline" }}
+<article class="sakura-page sakura-taxonomy-page sakura-categories-page{{ if $listArchives }} is-list-archives{{ end }}">
   {{- partial "page-header.html" . -}}
   <div class="sakura-page-content">
     <p class="sakura-taxonomy-count">共 {{ len .Data.Terms }} 个分类</p>
@@ -12,11 +15,20 @@
       <button type="button" class="sakura-tag-button" data-category="{{ .Term }}">{{ .Page.Title }} [{{ .Count }}]</button>
       {{ end }}
     </div>
-    <div id="categories-post-section" class="sakura-categories-posts" hidden>
+    <div id="categories-post-section" class="sakura-categories-posts" data-list-layout="{{ if $listArchives }}archives{{ else }}cards{{ end }}" hidden>
       <div class="sakura-section-divider">
         <span class="iconify sakura-section-divider__icon" data-icon="fa6-solid:water"></span>
         <span class="sakura-section-divider__text">文章列表</span>
       </div>
+      {{ if $listArchives }}
+      {{- partial "archives-timeline-list.html" (dict
+        "Pages" $posts
+        "ItemClass" "categories-post-item"
+        "FilterKey" "categories"
+        "Id" "categories-post-list"
+        "Hidden" true
+      ) -}}
+      {{ else }}
       <div class="sakura-post-list">
         <div class="post-list-container" id="categories-post-list">
           {{ range $index, $page := $posts }}
@@ -27,12 +39,13 @@
           {{ if not $cats }}
             {{ $cats = $page.Params.categories | default slice }}
           {{ end }}
-          <div class="categories-post-item" data-categories="{{ $cats | jsonify | safeHTMLAttr }}" hidden>
+          <div class="categories-post-item" data-categories='{{ $cats | jsonify }}' hidden>
             {{- partial "post-card.html" (dict "Page" $page "Site" $.Site "Index" $index) -}}
           </div>
           {{ end }}
         </div>
       </div>
+      {{ end }}
     </div>
   </div>
 </article>

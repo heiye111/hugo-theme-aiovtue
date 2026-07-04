@@ -1,7 +1,7 @@
 ---
 title: "归档"
 icon: "ri:archive-line"
-cover: "/hero/hero-3.jpg"
+cover: "/hero/tt3.png"
 layout: "archives"
 ---
 

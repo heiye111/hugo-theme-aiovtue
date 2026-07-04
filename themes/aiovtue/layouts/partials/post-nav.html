@@ -11,7 +11,7 @@
   {{- with $prev -}}
   {{- $cover := partial "post-cover.html" . -}}
   <a class="sakura-image-card card-prev{{ if and $merge $next }} has-sibling{{ end }}" href="{{ .RelPermalink }}">
-    <img class="sakura-image-card-img" src="{{ $cover }}" alt="{{ .Title }}" loading="lazy" decoding="async">
+    {{- partial "cover-list-media.html" (dict "cover" $cover "title" .Title "class" "sakura-image-card-img") -}}
     <div class="sakura-post-nav-content">
       <span class="sakura-post-nav-label">Previous Post</span>
       <span class="sakura-post-nav-title">{{ .Title }}</span>
@@ -21,7 +21,7 @@
   {{- with $next -}}
   {{- $cover := partial "post-cover.html" . -}}
   <a class="sakura-image-card card-next{{ if and $merge $prev }} has-sibling{{ end }}" href="{{ .RelPermalink }}">
-    <img class="sakura-image-card-img" src="{{ $cover }}" alt="{{ .Title }}" loading="lazy" decoding="async">
+    {{- partial "cover-list-media.html" (dict "cover" $cover "title" .Title "class" "sakura-image-card-img") -}}
     <div class="sakura-post-nav-content">
       <span class="sakura-post-nav-label">Next Post</span>
       <span class="sakura-post-nav-title">{{ .Title }}</span>

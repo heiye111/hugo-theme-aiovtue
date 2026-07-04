@@ -1,7 +1,31 @@
-# =============================================================================
-# AIOVTUE Hugo 博客 — 主配置文件
-# 修改后保存，本地运行 `npm run dev` 预览，确认无误后 `npm run build` 构建部署
-# 详细说明见项目根目录 README.md
+# 配置索引：
+#   [params]           站点参数总入口
+#   params.post        文章正文字号
+#   params.links       友链页
+#   params.moments     动态页
+#   params.bangumi     追番页（Bilibili）
+#   params.loader      全站加载动画
+#   params.author      作者信息
+#   params.hero        首页 Hero
+#   params.footer      页脚
+#   params.home        首页布局
+#   params.notice      公告栏
+#   params.social      社交图标
+#   params.charts      归档/标签图表
+#   params.sponsor     赞助
+#   params.license     版权声明
+#   params.comment     评论 provider
+#   params.waline      Waline（备用）
+#   params.twikoo      Twikoo（当前）
+#   params.envelope    留言页信封
+#   params.navbar      顶栏
+#   params.search      全文搜索
+#   params.menu.main   导航菜单
+#   params.music       音乐播放器
+#   params.live2d      Live2D 看板娘
+#   params.mouse        团团猫动态鼠标指针
+#   params.effects      全站背景特效（樱花/雨/雪等）
+#   params.pjax        无刷新跳转
 # =============================================================================
 
 # 站点正式访问地址（影响 sitemap、RSS、分享链接等绝对 URL，部署前务必与真实域名一致）
@@ -38,15 +62,27 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true        # 允许正文内嵌 HTML
+    [markup.goldmark.extensions]
+      [markup.goldmark.extensions.passthrough]
+        enable = true      # 保留 LaTeX 分隔符，由 passthrough render hook + KaTeX 构建时渲染
+        # 块级公式 $$ 结束后若紧跟 --- 分隔线，中间必须空一行，否则 Goldmark 会误解析为标题
+        [markup.goldmark.extensions.passthrough.delimiters]
+          block = [['\[', '\]'], ['$$', '$$']]
+          inline = [['\(', '\)'], ['$', '$']]
   [markup.highlight]
     style = "github"       # 代码高亮主题
     noClasses = false
     lineNos = false
     tabWidth = 4
   [markup.tableOfContents]
-    startLevel = 2         # 侧边栏目录默认从 h2 开始
+    startLevel = 2         # 目录从 h2 开始
     endLevel = 4           # 目录至 h4，不显示 h5/h6
     ordered = false
+
+# --- 资源类型：将 .excalidraw 识别为 JSON page bundle 资源 ---
+[mediaTypes]
+  [mediaTypes."application/json"]
+    suffixes = ["json", "excalidraw"]
 
 # =============================================================================
 # 站点参数（主题通过 .Site.Params 读取）
@@ -55,16 +91,42 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
   subtitle = '雪'                              # 副标题（首页标题后缀）
   description = '雨是神的烟花'                  # 站点默认描述（SEO、分享卡片）
   primaryColor = '#DF9193'                     # 主题主色
-  favicon = '/favicon.png'                       # 站点图标
-  defaultCover = '/img/default-cover.png'        # 无封面文章默认图（1780908652756，与 hero-2 不是同一张）
+  favicon = '/hero/avatar.png'
+  defaultCover = '/hero/tt3.png'               # 文章默认头图（无 cover 时使用）
+  math = false                                 # 默认关闭；单篇 front matter 写 math: true 启用构建时 KaTeX 渲染
+  postIndent = true                            # 文章/关于页正文首行缩进 2em（单篇可写 indent: false 关闭）
 
-  # --- 全站加载动画（首页进入时的加载页）---
+  # --- 文章/关于页正文 ---
+  [params.post]
+    fontSize = "1.1rem"                          # 正文字号（rem，如 0.95rem / 1.1rem）
+
+  # --- 友链页 ---
+  [params.links]
+    layout = 'preview'                        # preview：卡片截图 | simple：长条头像+悬停预览
+    rssEnable = true                         # 友链页「朋友动态」RSS 展示（关闭时不拉取 RSS）
+    footerEnable = true                      # 全站页脚友链列表展示
+
+  # --- 动态页（每条动态：content/moments/*.md，front matter 仅需 date）---
+  [params.moments]
+    layout = "memos"                          # memos：头像时间线 | cards：居中卡片
+    cardMaxWidth = "720px"                    # cards 模式下列表最大宽度
+
+  # --- 追番页（Bilibili 追番列表，构建时拉取 data/bangumi.json）---
+  [params.bangumi]
+    enable = true                             # 是否启用追番页与构建时数据拉取
+    vmid = '334423445'                        # Bilibili 用户 UID（追番列表需空间公开）
+    quote = '生命不息，追番不止！'              # 页面引言
+
+  # --- Excalidraw 画板文章（content/excalidraw/<slug>/index.md + *.excalidraw）---
+  # 独立栏目，首页/归档/搜索与 posts 合并展示；单页为交互式只读查看器
+
+  # --- 全站加载动画（首页进入时的樱花加载页）---
   [params.loader]
     enable = true
-    minShow = 480          # 最短显示时间（毫秒）
+    minShow = 0            # 最短显示时间（毫秒）
     maxDuration = 6000     # 最长等待时间（毫秒）
 
-  # --- 侧边栏 / 关于页作者信息 ---
+  # --- 侧栏 / 关于页作者信息 ---
   [params.author]
     name = 'AIOVTUE'
     avatar = '/hero/avatar.png'
@@ -82,65 +144,73 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
     typewriterSpeed = 80
     style = 'dot'          # 背景样式：dot / grid 等
     fixedImg = true
-    playerUrl = '/hero/player.mp4'   # 右下角小窗视频
+    playerUrl = '/hero/player.mp4'
     urls = [
-      '/hero/tt3.png', 
-      '/hero/hero-1.jpg',
-      '/hero/hero-2.png',
-      '/hero/hero-3.jpg',
+      '/hero/tt3.png',
+      '/hero/tt1.png',
+      '/hero/tt2.png',
+      '/hero/sp1.mp4',
+      '/hero/hero-1.jpg', 
+      '/hero/hero-2.png', 
       '/hero/hero-1.mp4',
       '/hero/hero-2.mp4',
-      '/hero/tt1.png', 
-      '/hero/tt2.png', 
+      
     ]
 
   # --- 页脚 ---
   [params.footer]
     since = 2024           # 版权起始年
     runtimeSince = '2024-01-01'   # 站点运行倒计时起点（YYYY-MM-DD）
-    icp = '<a href="https://icp.gov.moe/?keyword=20260258" target="_blank" rel="noopener">萌ICP备20260258号</a>' # 萌icp，建议可以搞一个，虽然没啥用，不搞记得把我删了哦
+    icp = '<a href="https://icp.gov.moe/?keyword=20260258" target="_blank" rel="noopener">萌ICP备20260258号</a>'
 
   # --- 首页公告栏（右侧域名列表）---
+  # --- 首页文章列表布局 ---
+  # cards：默认卡片列表（含公告栏与随机文章轮播）
+  # timeline：居中时间线，文章左右交替；不显示公告栏与随机文章
+  [params.home]
+    layout = 'cards'
+    timelineBatchSize = 10   # 时间线模式：首屏条数及每次滚动加载条数
+
   [params.notice]
     title = '公告栏'
     rotateInterval = 5000  # 左侧随机文章轮播间隔（毫秒）
     [[params.notice.sections]]
-      label = '--- 站点域名 ---'
+      label = '--- 主域名 ---'
       lines = ['daily.yybb.us', 'day.yybb.us']
     [[params.notice.sections]]
-      label = '--- 一些说明 ---'
-      lines = ['不止是可以写域名哦，也可以写文字啦，修改位置在根文件夹的hugo.toml文件内']
+      label = '--- 备用域名 ---'
+      lines = ['daily.20030327.xyz', 'daily.yybb.dpdns.org', 'daily.aiovtue.dpdns.org']
 
   # --- 侧栏 / Hero 社交图标（icon 为 Iconify 图标名）---
   [[params.social]]
-      name = 'RSS'
-      link = '/index.xml'  # Hugo 默认 RSS 路径
-      icon = 'ri:rss-line'
-      color = 'orange'
-    [[params.social]]
-      name = 'GitHub'
-      link = 'https://github.com/AIOVTUE'
-      icon = 'ri:github-line'
-      color = '#6e5494'
-    [[params.social]]
-      name = '微信公众号'
-      link = '/hero/wxgzh.png'
-      icon = 'ri:wechat-2-line'
-      color = '#1AAD19'
-    [[params.social]]
-      name = 'E-Mail'
-      link = 'mailto:x@yybb.us'
-      icon = 'ri:mail-line'
-      color = '#8E71C1'
-    [[params.social]]
-      name = 'Travelling'
-      link = 'https://www.travellings.cn/go.html'
-      icon = 'ri:train-line'
-      color = '#8cb1b3'
+    name = 'RSS'
+    link = '/index.xml'  # Hugo 默认 RSS 路径
+    icon = 'ri:rss-line'
+    color = 'orange'
+  [[params.social]]
+    name = 'GitHub'
+    link = 'https://github.com/AIOVTUE'
+    icon = 'ri:github-line'
+    color = '#6e5494'
+  [[params.social]]
+    name = '微信公众号'
+    link = '/hero/wxgzh.png'
+    icon = 'ri:wechat-2-line'
+    color = '#1AAD19'
+  [[params.social]]
+    name = 'E-Mail'
+    link = 'mailto:x@yybb.us'
+    icon = 'ri:mail-line'
+    color = '#8E71C1'
+  [[params.social]]
+    name = 'Travelling'
+    link = 'https://www.travellings.cn/go.html'
+    icon = 'ri:train-line'
+    color = '#8cb1b3'
 
   # --- 归档 / 标签页 ECharts 图表 ---
   [params.charts]
-    archivesStartMonth = '2024-01'   # 归档图起始月份
+    archivesStartMonth = '2024-03'   # 归档图起始月份
     tagsChartLength = 10             # 标签图显示 Top N
 
   # --- 文章页底部赞助按钮 ---
@@ -150,7 +220,7 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
     description = '我很可爱哦，可以给我点钱钱嘛~'
     [[params.sponsor.methods]]
       name = '支付宝'
-      url = '/img/zfb.png'  #也可以用图床哒~
+      url = '/img/zfb.png'
       color = '#00A3EE'
     [[params.sponsor.methods]]
       name = '微信支付'
@@ -169,37 +239,44 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
 
   # --- 评论系统（文章 / 友链 / 留言页共用）---
   # provider 可选：waline | twikoo
-  # 选waline的话可以去https://zerocat.dev/app/commentservice注册免费的，省的自己部署了
   # 单篇文章可在 front matter 写 comment: false 关闭评论区
   [params.comment]
-    provider = 'twikoo'  # 可选：waline | twikoo
+    provider = 'twikoo'
 
   # --- Waline 评论（https://waline.js.org/）---
-  # serverURL：Waline 服务端地址，在 Waline 后台创建站点后获得（末尾不要加 /）
+  # 仅当 params.comment.provider = waline 时生效；当前使用 twikoo，此处留作切换备用
   [params.waline]
-    serverURL = 'https://换成你的waline地址'  # 选了之后还要在这里配置相关地址哦
+    serverURL = 'https://your-waline-url'                                # 切换到 waline 时填写服务端地址（末尾不要加 /）
     placeholder = '分享你的想法...'
 
   # --- Twikoo 评论（仅当 params.comment.provider = twikoo 时生效）---
   # 留空 envId 时评论区显示配置提示，不影响站点其它功能
   [params.twikoo]
-    envId = 'https://换成你的twikoo地址'  # 选了之后还要在这里配置相关地址哦
+    envId = 'https://your-twikoo-url'
 
   # --- 留言页信封动画图片（文件在 static/envelope/）---
   [params.envelope]
-    before = '/envelope/before.png'    # 留言页面没有特殊需求就不要改这里哦
+    before = '/envelope/before.png'
     after = '/envelope/after.png'
     cover = '/envelope/cover.png'
     line = '/envelope/line.png'
     wrapHeight = 447
     openHeight = 1050
     openOffset = -200
+    danmakuOpenBottomTrim = 140   # 信封展开时弹幕区域底部向上缩短（像素）
 
   # --- 顶栏标题 ---
   [params.navbar]
     titleParts = ['AIOVTUE-', '雪']   # 顶栏主标题分段（可产生动画效果）
     subTitle = '雨是神的烟花'
     offset = 0
+
+    # 移动端下滑隐藏顶栏（首页除外）
+    [params.navbar.mobileCollapse]
+      enable = true
+      scrollThreshold = 48   # 滚动超过该距离后才允许隐藏（px）
+      scrollDelta = 15        # 单次滑动超过该值触发隐藏/恢复（px）
+      revealMode = 'scrollUp' # 隐藏后如何恢复：top = 回到顶部才显示 | scrollUp = 上划即显示
 
   # --- 全文搜索（Fuse.js）---
   [params.search]
@@ -232,10 +309,23 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
       url = '/tags/'
       icon = 'ant-design:tags-filled'
   [[params.menu.main]]
-    name = '相册'
-    url = '/gallery/'
-    icon = 'ant-design:picture-filled'
+    name = '个人'
+    url = '/moments/'
+    icon = 'ant-design:user-outlined'
+    navGroup = 'personal'
     weight = 3
+    [[params.menu.main.items]]
+      name = '相册'
+      url = '/gallery/'
+      icon = 'ant-design:picture-filled'
+    [[params.menu.main.items]]
+      name = '动态'
+      url = '/moments/'
+      icon = 'ant-design:compass-filled'
+    [[params.menu.main.items]]
+      name = '追番'
+      url = '/bangumi/'
+      icon = 'mdi:television-play'
   [[params.menu.main]]
     name = '留言'
     url = '/comment/'
@@ -251,3 +341,71 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
     url = '/about/'
     icon = 'ant-design:idcard-filled'
     weight = 6
+
+  # --- 音乐播放器（APlayer + Meting.js）---
+  # enable：是否显示播放器；单页可在 front matter 写 musicPlayer: false 关闭
+  [params.music]
+    enable = true
+    position = 'right'                             # left | right，按钮默认停靠左下或右下
+    draggable = false                             # 是否允许拖动按钮到任意位置（位置会记住）
+    # apis：按顺序尝试，前一个不可用时自动切换下一个
+    apis = [
+      'https://api.i-meto.com/meting/api?server=:server&type=:type&id=:id&r=:r',
+      'https://api.injahow.cn/meting/?server=:server&type=:type&id=:id',
+      'https://meting.qjqq.cn/?server=:server&type=:type&id=:id',
+    ]
+    server = 'netease'
+    type = 'playlist'                             # playlist | song | album | artist
+    id = '2580064383'                             # 网易云歌单/歌曲 ID
+
+  # --- Live2D 看板娘（左下角 Live2D 角色）---
+  # enable：是否启用；单页可在 front matter 写 live2d: false 关闭
+  [params.live2d]
+    enable = true
+    minWidth = 768                                # 低于此宽度不加载
+    drag = false
+    tools = ['hitokoto', 'asteroids', 'switch-model', 'switch-texture', 'photo', 'info', 'quit']
+
+    # 看板娘运行时（脚本 / 样式 / 提示语，一般保持默认即可）
+    widget = 'https://live2d.kafuchino.top/'
+    waifuTips = 'jsdelivr/sequential/waifu-tips.js'
+    waifuCss = 'css/left.css'
+    waifuTipsJson = 'waifu-tips.json'
+
+    # 模型库 cdnPath（静态模型目录，含 model_list.json）— 与 apiPath 二选一
+    cdnPath = 'https://live2d.kafuchino.top/'     # nova1751 扩展库：少女前线等（21 组模型）
+    # 备用模型库（取消注释一行替换上方 cdnPath 即可切换模型种类）：
+    # cdnPath = 'https://fastly.jsdelivr.net/gh/fghrsh/live2d_api/'   # fghrsh 经典库：Shizuku / 海王星 / Pio 等（7 组）
+    # cdnPath = 'https://cdn.jsdelivr.net/gh/fghrsh/live2d_api/'      # 同上 · jsDelivr 国内节点
+    # cdnPath = 'https://fastly.jsdelivr.net/gh/nova1751/live2d-api/' # nova1751 仓库镜像（模型集与 kafuchino 相同）
+    #
+    # 模型库 apiPath（fghrsh 动态 PHP 接口；启用时需注释掉上方 cdnPath）：
+    # apiPath = 'https://live2d.fghrsh.net/api/'                      # fghrsh 官方动态 API（接口式换模型/皮肤）
+
+  # --- 团团猫动态鼠标指针 ---
+  # enable：是否启用；单页可在 front matter 写 mouse: false 关闭
+  [params.mouse]
+    enable = true
+    path = '/mouse/tuantuanma/'                  # 预压缩 WebP + manifest.json（见 static/mouse/tuantuanma/）
+    scale = 0.25                                  # manifest 内记录的缩放；重新压缩时改 compress-mouse 脚本参数
+
+  # --- 全站背景特效（yzhanWeather · MIT，本地静态资源）---
+  # enable：是否启用；单页可在 front matter 写 effects: false 关闭
+  # type：sakura | rain | snow | firefly | butterfly | random（每次打开随机一种）
+  # mobile：触摸设备或宽度 ≤768px 是否启用（默认 false）
+  # randomize：打散雨/樱花/雪/蝴蝶轨迹；萤火虫不受此项影响，始终仅向上飘
+  [params.effects]
+    enable = true
+    type = 'firefly'
+    randomTypes = ['sakura', 'rain', 'snow', 'firefly', 'butterfly']
+    randomize = true                                # 打散位置/速度/轨迹，避免过于规律
+    mobile = false                                  # 移动端是否启用（默认关闭）
+    maxDuration = 10                                # 动画基准周期（秒），越大越慢
+    zIndex = 5                                      # 层级，需低于弹窗/导航
+    script = '/vendor/yzhanweather/yzhanweather.min.js'
+
+  # --- 站内无刷新跳转（PJAX）---
+  [params.pjax]
+    enable = true
+    fadeDuration = 200                            # 内容区淡入淡出时长（毫秒）
+    mountDelay = 120                              # 页内跳转：CSS/JS 就绪后额外等待（毫秒），减少布局突变

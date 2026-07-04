@@ -53,21 +53,27 @@
                     {{ $key = replaceRE "^([0-9]{4})-([0-9]{1,2}).*" "$1-$2" . }}
                   {{ end }}
                   {{ if eq $key $monthKey }}
-                    {{ $isVideo := or (hasSuffix .url ".mp4") (hasSuffix .url ".webm") }}
+                    {{ $photo := . }}
+                    {{ $urlLower := lower $photo.url }}
+                    {{ $isVideo := or (hasSuffix $urlLower ".mp4") (hasSuffix $urlLower ".webm") (hasSuffix $urlLower ".mov") }}
                     <button
                       type="button"
                       class="album-viewer__photo{{ if $isVideo }} is-video{{ end }}"
-                      data-media-src="{{ .url }}"
+                      data-media-src="{{ $photo.url }}"
                       data-media-type="{{ if $isVideo }}video{{ else }}image{{ end }}"
                       aria-label="{{ if $isVideo }}相册视频{{ else }}相册照片{{ end }}"
                     >
                       {{ if $isVideo }}
-                      <img src="{{ with .poster }}{{ . }}{{ else }}{{ $.Params.cover }}{{ end }}" alt="" loading="lazy" decoding="async">
+                      {{ with $photo.poster }}
+                      <img class="album-viewer__thumb" src="{{ . }}" alt="" loading="eager" decoding="async">
+                      {{ else }}
+                      <video class="album-viewer__thumb-video" src="{{ $photo.url }}" preload="metadata" muted playsinline disablepictureinpicture aria-hidden="true"></video>
+                      {{ end }}
                       <span class="album-viewer__play" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
                       </span>
                       {{ else }}
-                      <img src="{{ .url }}" alt="" loading="lazy" decoding="async">
+                      <img src="{{ $photo.url }}" alt="" loading="lazy" decoding="async">
                       {{ end }}
                     </button>
                   {{ end }}

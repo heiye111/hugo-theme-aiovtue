@@ -1,18 +1,56 @@
 {{ define "main" }}
+{{ $layout := .Site.Params.home.layout | default "cards" }}
+{{ if not (in (slice "cards" "timeline") $layout) }}{{ $layout = "cards" }}{{ end }}
+{{ $posts := where .Site.RegularPages "Section" "in" (slice "posts" "excalidraw") }}
+{{ $posts = sort $posts "Date" "desc" }}
 <section class="sakura-home">
   {{- partial "hero.html" . -}}
-  <div class="sakura-home-layout" id="home-posts">
-    {{- partial "notice-board.html" . -}}
+  <div class="sakura-home-layout is-layout-{{ $layout }}" id="home-posts" data-home-layout="{{ $layout }}">
+    {{ if eq $layout "cards" }}
+    <div class="home-layout-notice" id="home-layout-notice">
+      {{- partial "notice-board.html" . -}}
+    </div>
+    {{ end }}
     <div class="sakura-post-list" id="home-post-list">
-      <div class="post-list-container">
-        {{ $posts := where .Site.RegularPages "Section" "posts" }}
-        {{ $posts = sort $posts "Date" "desc" }}
-        {{ $paginator := .Paginate $posts 10 }}
+      {{ if eq $layout "cards" }}
+      {{ $paginator := .Paginate $posts 10 }}
+      <div class="post-list-container post-list-container--cards">
         {{ range $index, $page := $paginator.Pages }}
           {{- partial "post-card.html" (dict "Page" $page "Site" $.Site "Index" $index) -}}
         {{ end }}
       </div>
       {{- partial "pagination.html" . -}}
+      {{ else }}
+      {{ $batchSize := .Site.Params.home.timelineBatchSize | default 10 }}
+      {{ $visible := first $batchSize $posts }}
+      {{ $remaining := after (len $visible) $posts }}
+      <div class="post-list-container post-list-container--timeline">
+        <ol class="home-timeline" id="home-timeline-list">
+          {{ range $index, $page := $visible }}
+            {{- partial "post-card-timeline.html" (dict "Page" $page "Site" $.Site "Index" $index) -}}
+          {{ end }}
+        </ol>
+        {{ if $remaining }}
+        {{ $morePosts := slice }}
+        {{ range $index, $page := $remaining }}
+          {{ $showDate := $page.Lastmod }}
+          {{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
+          {{ $morePosts = $morePosts | append (dict
+            "title" $page.Title
+            "url" $page.RelPermalink
+            "date" ($showDate.Format "2006-01-02")
+            "dateYear" ($showDate.Format "2006")
+            "dateMd" ($showDate.Format "01-02")
+            "excerpt" ($page.Description | default $page.Summary | plainify | truncate 160)
+            "index" (add (len $visible) $index)
+          ) }}
+        {{ end }}
+        <script type="application/json" id="home-timeline-more-data">{{ $morePosts | jsonify }}</script>
+        <div class="home-timeline-scroll-sentinel" id="home-timeline-scroll-sentinel" data-batch-size="{{ $batchSize }}" aria-hidden="true"></div>
+        <p class="home-timeline-load-status" id="home-timeline-load-status" hidden aria-live="polite"></p>
+        {{ end }}
+      </div>
+      {{ end }}
     </div>
   </div>
 </section>

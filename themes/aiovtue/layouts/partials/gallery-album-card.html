@@ -2,7 +2,7 @@
 <li class="album-grid__item">
   <a class="album-grid__card" href="{{ $page.RelPermalink }}">
     {{ if $page.Params.cover }}
-    <img class="album-grid__cover sakura-lazy-img" src="{{ $page.Params.cover }}" alt="{{ $page.Title }}" loading="lazy" decoding="async">
+    {{- partial "cover-list-media.html" (dict "cover" $page.Params.cover "title" $page.Title "class" "album-grid__cover sakura-lazy-img") -}}
     {{ else }}
     <div class="album-grid__cover album-grid__cover--placeholder" aria-hidden="true"><span>📷</span></div>
     {{ end }}

@@ -2,7 +2,7 @@
 .sakura-gallery-album-page {
   --gallery-page-outer: #{"max(96px, 10vw, env(safe-area-inset-left, 0px))"};
   --gallery-page-inner: 28px;
-  --gallery-page-header-gap: 28px;
+  --gallery-page-header-gap: var(--sakura-page-header-content-gap);
   --gallery-page-max-width: 1080px;
 
   width: 100%;
@@ -10,62 +10,11 @@
   flex-direction: column;
   align-items: stretch;
 
-  .gallery-page-header {
+  .sakura-page-header {
     margin-top: var(--sakura-navbar-height);
-    width: 100%;
-    position: relative;
 
     .sakura-header-title {
       justify-content: center;
-    }
-
-    &.has-cover {
-      height: 320px;
-      margin-bottom: var(--gallery-page-header-gap);
-      overflow: hidden;
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-    }
-
-    &__cover {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    &__inner {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      padding-bottom: 25px;
-      color: #fff;
-      text-align: center;
-    }
-
-    &__count {
-      margin: 10px 0 0;
-      font-size: 0.88rem;
-      font-weight: 500;
-      line-height: 1.5;
-    }
-
-    &:not(.has-cover) .gallery-page-header__inner {
-      color: inherit;
-    }
-
-    &:not(.has-cover) .gallery-page-header__count {
-      color: var(--sakura-color-text-muted);
-    }
-
-    &.has-cover .gallery-page-header__count {
-      color: rgba(255, 255, 255, 0.9);
-      text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.45);
     }
   }
 
@@ -92,7 +41,7 @@
   @media (max-width: 768px) {
     --gallery-page-outer: #{"max(16px, env(safe-area-inset-left, 0px))"};
     --gallery-page-inner: 12px;
-    --gallery-page-header-gap: 20px;
+    --gallery-page-header-gap: var(--sakura-page-header-content-gap);
     --gallery-page-max-width: none;
 
     .sakura-page-content {
@@ -102,8 +51,8 @@
   }
 }
 
-.sakura-gallery-page .gallery-page-header.has-cover .sakura-title,
-.sakura-gallery-album-page .gallery-page-header.has-cover .sakura-title {
+.sakura-gallery-page .sakura-page-header.has-cover .sakura-title,
+.sakura-gallery-album-page .sakura-page-header.has-cover .sakura-title {
   color: inherit;
   text-shadow: 2px 2px 10px #000;
 }
@@ -173,6 +122,7 @@
     height: 100%;
     object-fit: cover;
     display: block;
+    pointer-events: none;
 
     &--placeholder {
       display: flex;
@@ -425,9 +375,11 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
     transition: box-shadow 0.16s ease;
 
-    img {
+    img,
+    video {
       width: 100%;
       height: 100%;
+      max-width: none;
       object-fit: cover;
       display: block;
       pointer-events: none;
