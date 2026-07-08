@@ -27,7 +27,15 @@
 
     </span>
 
-    <span itemprop="copyrightHolder">{{ .Site.Params.author.name }}</span>
+    <span>by</span>
+
+    <span itemprop="copyrightHolder">
+      {{- if default true .Site.Params.signature.footerEnable -}}
+      <span class="sakura-copyright-signature">{{- partial "signature-inline.html" . -}}</span>
+      {{- else -}}
+      <span class="sakura-copyright-author">{{ .Site.Params.author.name }}</span>
+      {{- end -}}
+    </span>
 
   </div>
 
@@ -48,6 +56,10 @@
   </p>
 
   {{ end }}
+
+  <p class="sakura-footer-powered">
+    Powered by <a href="https://github.com/gohugoio/hugo" target="_blank" class="sakura-footer-powered__link">hugo</a> & theme <a href="https://github.com/AIOVTUE/hugo-theme-aiovtue" target="_blank" class="sakura-footer-powered__link">aiovtue</a>
+  </p>
 
   {{- if partial "footer-links-enabled.html" . -}}
   {{- partial "footer-links-nav.html" . -}}

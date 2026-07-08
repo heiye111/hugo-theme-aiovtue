@@ -1,5 +1,9 @@
 {{- $dest := strings.TrimSpace .Destination -}}
 {{- $alt := .PlainText | default .Title | default "" -}}
+{{- $isSignature := and (eq $alt "签名") (in (slice "signature:" "signature" "#signature") $dest) -}}
+{{- if $isSignature -}}
+{{- partial "signature-inline.html" (merge (partial "signature-prose-args.html" .) (dict "primary" true)) -}}
+{{- else -}}
 {{- $lower := lower $dest -}}
 {{- $isVideo := or (hasSuffix $lower ".mp4") (hasSuffix $lower ".webm") (hasSuffix $lower ".ogg") -}}
 {{- $src := $dest -}}
@@ -35,4 +39,5 @@
   loading="lazy"
   decoding="async"
 >
+{{- end -}}
 {{- end -}}

@@ -4,7 +4,7 @@
 {{ $showDate := $page.Lastmod }}
 {{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
 <article class="sakura-post-card {{ if eq $pos 0 }}left{{ else }}right{{ end }}{{ if $page.Params.pinned }} is-pinned{{ end }}">
-  {{- partial "post-pinned-badge.html" $page -}}
+  {{- partial "post-pinned-badge.html" (dict "Page" $page) -}}
   <a class="sakura-post-card__cover aspect-video" href="{{ $page.RelPermalink }}">
     {{- partial "cover-list-media.html" (dict "cover" $cover "title" $page.Title "class" "sakura-lazy-img") -}}
   </a>

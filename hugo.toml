@@ -128,7 +128,7 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
 
   # --- 侧栏 / 关于页作者信息 ---
   [params.author]
-    name = 'AIOVTUE'
+    name = '作者名称'
     avatar = '/hero/avatar.png'
     statusEmoji = '🌸'     # 头像角标
     statusMessage = '发呆ing...'
@@ -167,8 +167,18 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
   # --- 首页文章列表布局 ---
   # cards：默认卡片列表（含公告栏与随机文章轮播）
   # timeline：居中时间线，文章左右交替；不显示公告栏与随机文章
+    # mobileCardsLayout：cards 模式下手机端文章列表样式（仅 max-width: 768px 生效）
+  #   stack — 竖向卡片（默认，与桌面左右交替卡片在手机端的表现一致）
+  #   list  — 列表样式：隐藏公告栏与随机文章；一行一条，左图 40% / 右文 60%
+  # mobileCardsPaging：cards 模式下手机端翻页方式（仅 max-width: 768px 生效；桌面端始终分页）
+  #   pagination — 底部分页器翻页（默认）
+  #   loadMore   — 滑动到底部自动加载更多（仅首页第一页）
+  # mobileCardsBatchSize：手机端 loadMore 模式每次加载条数
   [params.home]
     layout = 'cards'
+    mobileCardsLayout = 'list'
+    mobileCardsPaging = 'loadMore'
+    mobileCardsBatchSize = 10
     timelineBatchSize = 10   # 时间线模式：首屏条数及每次滚动加载条数
 
   [params.notice]
@@ -232,6 +242,14 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
     enable = true
     type = 'by-nc-sa'      # CC 类型：by / by-nc / by-nc-sa / zero 等
     language = 'zh'
+    
+  # --- 动态手写签名（signature-inline）---
+  # postCopyrightEnable：文章底部版权声明处的签名动画
+  # footerEnable：全站页脚 copyright 区「by xxx」处的签名动画（关闭后显示 author.name 文字）
+  # 不影响正文 Markdown 中 [签名](signature:) 的签名效果
+  [params.signature]
+    postCopyrightEnable = false
+    footerEnable = false
 
   # --- 文章页脚导航 ---
   [params.postFooter]
@@ -272,8 +290,10 @@ enableRobotsTXT = true     # 生成 robots.txt（模板在 themes/aiovtue/layout
     offset = 0
 
     # 移动端下滑隐藏顶栏（首页除外）
+    # 移动端下滑隐藏顶栏（默认首页不生效，设 includeHome = true 则全站含首页生效）
     [params.navbar.mobileCollapse]
       enable = true
+      includeHome = true
       scrollThreshold = 48   # 滚动超过该距离后才允许隐藏（px）
       scrollDelta = 15        # 单次滑动超过该值触发隐藏/恢复（px）
       revealMode = 'scrollUp' # 隐藏后如何恢复：top = 回到顶部才显示 | scrollUp = 上划即显示

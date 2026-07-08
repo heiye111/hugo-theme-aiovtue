@@ -1,0 +1,5 @@
+{{- $layout := .Site.Params.home.layout | default "cards" -}}
+{{- if not (in (slice "cards" "timeline") $layout) -}}{{- $layout = "cards" -}}{{- end -}}
+{{- $mobileCardsLayout := .Site.Params.home.mobileCardsLayout | default "stack" -}}
+{{- if not (in (slice "stack" "list") $mobileCardsLayout) -}}{{- $mobileCardsLayout = "stack" -}}{{- end -}}
+{{- return (and (eq $layout "cards") (eq $mobileCardsLayout "list")) -}}

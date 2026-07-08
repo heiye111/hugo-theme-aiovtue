@@ -22,18 +22,26 @@
 {{- $link := .Permalink | absURL -}}
 {{- $parsed := urls.Parse (.Site.BaseURL | absURL) -}}
 {{- $displayLink := printf "%s://%s%s" $parsed.Scheme $parsed.Host .RelPermalink -}}
-<ul class="post-copyright">
-  <li class="post-copyright-author">
-    <strong>本文作者：</strong>
-    <span>{{ .Site.Params.author.name }}</span>
-  </li>
-  <li class="post-copyright-link">
-    <strong>本文链接：</strong>
-    <a href="{{ $link }}" target="_blank" rel="noopener" title="本文链接">{{ $displayLink }}</a>
-  </li>
-  <li class="post-copyright-license">
-    <strong>版权声明：</strong>
-    <span>本站所有文章除特别声明外，均采用 <a href="{{ $ccUrl }}" target="_blank" rel="noopener" title="{{ $ccLabel }} {{ $version }}">{{ $ccLabel }}</a> 许可协议。</span>
-  </li>
-</ul>
+<div class="post-copyright-wrap">
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      {{- if default true .Site.Params.signature.postCopyrightEnable -}}
+      <span class="post-copyright-author-signature">
+        {{- partial "signature-inline.html" (dict "autoplay" false) -}}
+      </span>
+      {{- else -}}
+      <span class="post-copyright-author-name"> {{ .Site.Params.author.name }}</span>
+      {{- end -}}
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="{{ $link }}" target="_blank" rel="noopener" title="本文链接">{{ $displayLink }}</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明：</strong>
+      <span>本站所有文章除特别声明外，均采用 <a href="{{ $ccUrl }}" target="_blank" rel="noopener" title="{{ $ccLabel }} {{ $version }}">{{ $ccLabel }}</a> 许可协议。</span>
+    </li>
+  </ul>
+</div>
 {{- end -}}

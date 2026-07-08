@@ -1,5 +1,6 @@
 import { requestPageCommentsMount } from './comments.js'
 import { awaitPageLazyModules } from './lazy-modules.js'
+import { hidePjaxLoader, showPjaxLoader } from './pjax-loader.js'
 
 const DEFAULT_FADE_MS = 200
 const DEFAULT_MOUNT_DELAY_MS = 120
@@ -237,15 +238,17 @@ function writeHomeListScrollCache(cache) {
 
 function normalizeHomeListScrollEntry(entry) {
   if (typeof entry === 'number' && Number.isFinite(entry) && entry >= 0) {
-    return { y: entry, timelineItems: 0 }
+    return { y: entry, timelineItems: 0, cardsItems: 0 }
   }
   if (!entry || typeof entry !== 'object') return null
   const y = entry.y
   if (typeof y !== 'number' || !Number.isFinite(y) || y < 0) return null
   const timelineItems = Number.parseInt(entry.timelineItems, 10)
+  const cardsItems = Number.parseInt(entry.cardsItems, 10)
   return {
     y,
     timelineItems: Number.isFinite(timelineItems) && timelineItems > 0 ? timelineItems : 0,
+    cardsItems: Number.isFinite(cardsItems) && cardsItems > 0 ? cardsItems : 0,
   }
 }
 
@@ -257,6 +260,7 @@ export function saveHomeListScroll(href = window.location.href, extra = {}) {
   cache[key] = {
     y: window.scrollY,
     timelineItems: Number.parseInt(extra.timelineItems, 10) || 0,
+    cardsItems: Number.parseInt(extra.cardsItems, 10) || 0,
   }
   writeHomeListScrollCache(cache)
 }
@@ -280,17 +284,17 @@ export function pickHomeListScroll(href, historyScrollY = null) {
 
   if (cached && cached.y > 0) {
     if (historyY != null && historyY > cached.y) {
-      return { y: historyY, timelineItems: cached.timelineItems }
+      return { y: historyY, timelineItems: cached.timelineItems, cardsItems: cached.cardsItems }
     }
     return cached
   }
 
   if (historyY != null && historyY > 0) {
-    return { y: historyY, timelineItems: cached?.timelineItems ?? 0 }
+    return { y: historyY, timelineItems: cached?.timelineItems ?? 0, cardsItems: cached?.cardsItems ?? 0 }
   }
 
   if (cached) return cached
-  if (historyY != null) return { y: historyY, timelineItems: 0 }
+  if (historyY != null) return { y: historyY, timelineItems: 0, cardsItems: 0 }
   return null
 }
 
@@ -402,6 +406,7 @@ export function initPageNav({ mountPage, unmountPage, resolveScrollAfterMount, c
     }
 
     navigating = true
+    showPjaxLoader()
 
     try {
       markSkipLoader()
@@ -467,6 +472,7 @@ export function initPageNav({ mountPage, unmountPage, resolveScrollAfterMount, c
       markSkipLoader()
       window.location.assign(url)
     } finally {
+      hidePjaxLoader()
       pjaxContentMounting = false
       window.__sakuraPjaxMounting = false
       navigating = false

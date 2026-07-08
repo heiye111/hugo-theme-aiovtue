@@ -2,7 +2,7 @@
 export let refreshHomeNavbar = null
 export let refreshMobileNavbarCollapse = null
 
-const MOBILE_NAVBAR_MQ = '(max-width: 767px)'
+const MOBILE_NAVBAR_MQ = '(max-width: 768px)'
 
 export function initHomeNavbar() {
   const navbar = document.getElementById('navbar')
@@ -75,7 +75,8 @@ export function initMobileNavbarCollapse() {
 
   const isEnabledContext = () => {
     if (!window.matchMedia(MOBILE_NAVBAR_MQ).matches) return false
-    if (document.documentElement.classList.contains('is-home')) return false
+    const collapseOnHome = navbar.dataset.mobileCollapseHome === '1'
+    if (document.documentElement.classList.contains('is-home') && !collapseOnHome) return false
     if (document.documentElement.classList.contains('is-search-open')) return false
     if (navbar.classList.contains('is-scroll-locked')) return false
     if (document.getElementById('sidebar')?.classList.contains('is-open')) return false

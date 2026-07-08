@@ -2,9 +2,84 @@
 import { applyTargetScroll, readHomeListScrollMeta } from './page-nav.js'
 import { registerPageCleanup } from './page-cleanup.js'
 import { escapeHtml, parseJsonData } from './utils.js'
+import { initLazyImages } from './lazy-images.js'
+
+const MOBILE_CARDS_MQ = '(max-width: 768px)'
+
+function formatHomeMobileListTime(isoDate, absoluteLabel) {
+  if (!isoDate) return absoluteLabel
+
+  const date = new Date(isoDate)
+  if (Number.isNaN(date.getTime())) return absoluteLabel
+
+  const diffMs = Date.now() - date.getTime()
+  const sevenDaysMs = 7 * 24 * 60 * 60 * 1000
+  if (diffMs < 0 || diffMs > sevenDaysMs) return absoluteLabel
+
+  const diffMinutes = Math.floor(diffMs / 60000)
+  if (diffMinutes < 1) return '刚刚'
+  if (diffMinutes < 60) return `${diffMinutes} 分钟前`
+
+  const diffHours = Math.floor(diffMinutes / 60)
+  if (diffHours < 24) return `${diffHours} 小时前`
+
+  const diffDays = Math.floor(diffHours / 24)
+  return `${diffDays} 天前`
+}
+
+function initHomeMobileListTimes(root) {
+  const roots = root
+    ? [root]
+    : [...document.querySelectorAll('.is-mobile-cards-list')]
+  roots.forEach((scope) => {
+    scope.querySelectorAll('.sakura-post-card .sakura-post-date time[datetime]').forEach((timeEl) => {
+      const absolute = timeEl.textContent.trim()
+      const formatted = formatHomeMobileListTime(timeEl.getAttribute('datetime'), absolute)
+      timeEl.textContent = formatted
+      if (formatted !== absolute) {
+        timeEl.title = `编辑于${absolute}`
+      } else {
+        timeEl.removeAttribute('title')
+      }
+    })
+  })
+}
+
+function syncHomeMobileListPins() {
+  const mobile = window.matchMedia(MOBILE_CARDS_MQ).matches
+  document.querySelectorAll('.is-mobile-cards-list .sakura-post-card > .sakura-post-pin').forEach((pin) => {
+    const icon = pin.querySelector('iconify-icon')
+    if (mobile) {
+      pin.classList.add('is-pin-flip')
+      icon?.setAttribute('flip', 'horizontal')
+    } else {
+      pin.classList.remove('is-pin-flip')
+      icon?.removeAttribute('flip')
+    }
+  })
+}
+
+let homeMobileListPinsBound = false
+
+export function refreshMobileCardsListPage() {
+  initHomeMobileListTimes()
+  syncHomeMobileListPins()
+}
+
+function initHomeMobileListPins() {
+  refreshMobileCardsListPage()
+  if (homeMobileListPinsBound) return
+  homeMobileListPinsBound = true
+  window.addEventListener('resize', syncHomeMobileListPins, { passive: true })
+  registerPageCleanup(() => {
+    window.removeEventListener('resize', syncHomeMobileListPins)
+    homeMobileListPinsBound = false
+  })
+}
 
 let homePostListRevealObserver = null
 let homeTimelineLoader = null
+let homeCardsLoader = null
 let homeListScrollRestoreToken = 0
 
 function getPostListScrollTop() {
@@ -49,10 +124,36 @@ function prepareHomeTimelineForScroll(targetY, timelineItemsTarget = 0) {
   })
 }
 
+function prepareHomeCardsForScroll(targetY, cardsItemsTarget = 0) {
+  if (!homeCardsLoader?.hasMore?.()) return Promise.resolve()
+
+  return new Promise((resolve) => {
+    const step = () => {
+      const currentCount = document.querySelectorAll('#home-cards-list .sakura-post-card').length
+      if (cardsItemsTarget > 0 && currentCount >= cardsItemsTarget) {
+        resolve()
+        return
+      }
+      if (document.documentElement.scrollHeight >= targetY + window.innerHeight * 0.5) {
+        resolve()
+        return
+      }
+      if (!homeCardsLoader?.hasMore?.()) {
+        resolve()
+        return
+      }
+      homeCardsLoader.loadNextBatch({ force: true })
+      requestAnimationFrame(step)
+    }
+    step()
+  })
+}
+
 export function restoreHomeListScroll(meta) {
   const targetY = meta.y
   const token = ++homeListScrollRestoreToken
   homeTimelineLoader?.pauseAutoLoad?.()
+  homeCardsLoader?.pauseAutoLoad?.()
   const apply = () => {
     if (token !== homeListScrollRestoreToken) return
     applyHomeListScroll(targetY)
@@ -67,10 +168,15 @@ export function restoreHomeListScroll(meta) {
     }
   }
 
-  return prepareHomeTimelineForScroll(targetY, meta.timelineItems).then(() => {
+  return Promise.all([
+    prepareHomeTimelineForScroll(targetY, meta.timelineItems),
+    prepareHomeCardsForScroll(targetY, meta.cardsItems),
+  ]).then(() => {
     if (token !== homeListScrollRestoreToken) return
     apply()
     homeTimelineLoader?.resumeAutoLoad?.()
+    homeCardsLoader?.resumeAutoLoad?.()
+    syncHomeMobileListPins()
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -167,6 +273,9 @@ export function initHomePostListScrollAnimation() {
   const root = document.getElementById('home-post-list')
   if (!root) return
 
+  initHomeMobileListTimes()
+  initHomeMobileListPins()
+
   const cards = [...root.querySelectorAll('.sakura-post-card, .home-timeline-item__content')]
   if (!cards.length) return
 
@@ -194,6 +303,219 @@ function createHomeTimelineItem(post) {
     <span class="home-timeline-item__dot" aria-hidden="true"></span>
   `
   return li
+}
+
+function renderHomeCardCategoriesHtml(categories) {
+  if (!Array.isArray(categories) || !categories.length) return ''
+  return categories.map((category, index) => {
+    const sep = index === 0
+      ? ''
+      : '<span class="sakura-post-categories__sep">/</span>'
+    const icon = index === 0
+      ? '<iconify-icon icon="mdi:folder-open-outline" class="sakura-icon sakura-post-categories__icon" aria-hidden="true"></iconify-icon>'
+      : ''
+    const href = `/categories/?category=${encodeURIComponent(category)}`
+    return `${sep}<a class="sakura-post-categories__link" href="${escapeHtml(href)}">${icon}<span>${escapeHtml(category)}</span></a>`
+  }).join('')
+}
+
+function renderHomeCardCoverHtml(post) {
+  if (!post.cover) return ''
+  const src = escapeHtml(post.cover)
+  const title = escapeHtml(post.title || '')
+  if (post.coverIsVideo) {
+    return `<video class="sakura-cover-thumb sakura-lazy-img" src="${src}" muted playsinline preload="metadata" disablepictureinpicture aria-hidden="true"></video>`
+  }
+  return `<img class="sakura-lazy-img" src="${src}" alt="${title}" loading="lazy" decoding="async">`
+}
+
+function createHomeCardsItem(post) {
+  const side = (post.index % 2 === 0) ? 'left' : 'right'
+  const article = document.createElement('article')
+  article.className = `sakura-post-card ${side}${post.pinned ? ' is-pinned' : ''}`
+  const pinHtml = post.pinned
+    ? '<span class="sakura-post-pin" title="置顶" aria-label="置顶"><iconify-icon icon="mdi:pin" aria-hidden="true"></iconify-icon></span>'
+    : ''
+  const categoriesHtml = renderHomeCardCategoriesHtml(post.categories)
+  const metaHtml = categoriesHtml
+    ? `<div class="sakura-post-meta"><div class="sakura-post-categories">${categoriesHtml}</div></div>`
+    : '<div class="sakura-post-meta"></div>'
+  article.innerHTML = `
+    ${pinHtml}
+    <a class="sakura-post-card__cover aspect-video" href="${escapeHtml(post.url)}">
+      ${renderHomeCardCoverHtml(post)}
+    </a>
+    <div class="sakura-post-card__content has-cover">
+      <div class="sakura-post-card-info">
+        <div class="sakura-post-date post-date">
+          <span class="sakura-post-date__inner" title="编辑于${escapeHtml(post.date || '')}">
+            <iconify-icon icon="mdi:clock-outline" class="sakura-icon sakura-post-date__icon" aria-hidden="true"></iconify-icon>
+            <span class="sakura-post-date__label">编辑于</span>
+            <time datetime="${escapeHtml(post.date || '')}" itemprop="dateModified">${escapeHtml(post.date || '')}</time>
+          </span>
+        </div>
+        <h2 class="sakura-post-title sakura-post-card__title">
+          <a href="${escapeHtml(post.url)}" aria-label="阅读全文：${escapeHtml(post.title)}">${escapeHtml(post.title)}</a>
+        </h2>
+        ${metaHtml}
+        <div class="sakura-post-excerpt sakura-post-card__excerpt"></div>
+      </div>
+    </div>
+  `
+  return article
+}
+
+export function initHomeCardsLoadMore() {
+  const layout = document.querySelector('.sakura-home-layout[data-mobile-cards-paging="loadMore"]')
+  const list = document.getElementById('home-cards-list')
+  const dataEl = document.getElementById('home-cards-more-data')
+  const sentinel = document.getElementById('home-cards-scroll-sentinel')
+  const statusEl = document.getElementById('home-cards-load-status')
+  const root = document.getElementById('home-post-list')
+  if (!layout || !list || !dataEl || !sentinel || !root) return
+
+  let posts = []
+  try {
+    posts = parseJsonData(dataEl)
+  } catch (err) {
+    console.warn('[home-cards]', err)
+    sentinel.remove()
+    statusEl?.remove()
+    return
+  }
+
+  if (!posts.length) {
+    sentinel.remove()
+    dataEl.remove()
+    statusEl?.remove()
+    return
+  }
+
+  const batchSize = Math.max(1, parseInt(sentinel.dataset.batchSize || '10', 10) || 10)
+  let loading = false
+  let autoLoadPaused = false
+  let observing = false
+  let scrollObserver = null
+  let resizeObserverBound = false
+
+  const setStatus = (mode) => {
+    if (!statusEl) return
+    if (mode === 'idle') {
+      statusEl.hidden = true
+      statusEl.textContent = ''
+      statusEl.classList.remove('is-loading', 'is-done')
+      return
+    }
+    statusEl.hidden = false
+    statusEl.classList.toggle('is-loading', mode === 'loading')
+    statusEl.classList.toggle('is-done', mode === 'done')
+    statusEl.textContent = mode === 'loading' ? '加载中…' : '没有更多了'
+  }
+
+  const finish = () => {
+    scrollObserver?.disconnect()
+    observing = false
+    sentinel.remove()
+    dataEl.remove()
+    setStatus('done')
+  }
+
+  const isMobileCardsContext = () => window.matchMedia(MOBILE_CARDS_MQ).matches
+
+  const isSentinelNearViewport = () => {
+    if (!sentinel.isConnected) return false
+    return sentinel.getBoundingClientRect().top <= window.innerHeight + 320
+  }
+
+  const loadNextBatch = ({ force = false } = {}) => {
+    if (!isMobileCardsContext() || loading || (!force && autoLoadPaused) || !posts.length) return
+    loading = true
+    setStatus('loading')
+
+    const batch = posts.slice(0, batchSize)
+    posts = posts.slice(batchSize)
+
+    const newCards = []
+    batch.forEach((post) => {
+      const item = createHomeCardsItem(post)
+      list.appendChild(item)
+      newCards.push(item)
+    })
+
+    initLazyImages(list)
+    initHomeMobileListTimes(layout)
+    syncHomeMobileListPins()
+    observeHomePostListReveal(root, newCards)
+
+    if (!posts.length) {
+      finish()
+    } else {
+      setStatus('idle')
+    }
+
+    loading = false
+
+    if (posts.length && isSentinelNearViewport() && force) {
+      loadNextBatch({ force: true })
+    }
+  }
+
+  const startObserving = () => {
+    if (!isMobileCardsContext() || observing || !sentinel.isConnected) return
+    scrollObserver?.observe(sentinel)
+    observing = true
+  }
+
+  const stopObserving = () => {
+    if (!observing) return
+    scrollObserver?.disconnect()
+    observing = false
+    setStatus('idle')
+  }
+
+  scrollObserver = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) loadNextBatch()
+  }, {
+    root: null,
+    rootMargin: '0px 0px 320px 0px',
+    threshold: 0,
+  })
+
+  const syncMobileState = () => {
+    if (isMobileCardsContext()) {
+      startObserving()
+      if (isSentinelNearViewport() && !autoLoadPaused) loadNextBatch()
+    } else {
+      stopObserving()
+    }
+  }
+
+  if (!resizeObserverBound) {
+    resizeObserverBound = true
+    window.addEventListener('resize', syncMobileState, { passive: true })
+    registerPageCleanup(() => {
+      window.removeEventListener('resize', syncMobileState)
+    })
+  }
+
+  homeCardsLoader = {
+    loadNextBatch,
+    hasMore: () => posts.length > 0,
+    pauseAutoLoad: () => {
+      autoLoadPaused = true
+    },
+    resumeAutoLoad: () => {
+      autoLoadPaused = false
+      if (isSentinelNearViewport()) loadNextBatch()
+    },
+  }
+
+  syncMobileState()
+
+  registerPageCleanup(() => {
+    scrollObserver?.disconnect()
+    homeCardsLoader = null
+  })
 }
 
 export function initHomeTimelineLoadMore() {

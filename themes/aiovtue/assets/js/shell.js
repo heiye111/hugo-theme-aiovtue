@@ -151,11 +151,21 @@ export function bootShell({ mountPage, unmountPage }) {
     mountPage,
     unmountPage,
     collectHomeListScrollExtra() {
-      const list = document.getElementById('home-timeline-list')
-      if (!list) return {}
-      return {
-        timelineItems: list.querySelectorAll('.home-timeline-item').length,
+      const timeline = document.getElementById('home-timeline-list')
+      if (timeline) {
+        return {
+          timelineItems: timeline.querySelectorAll('.home-timeline-item').length,
+          cardsItems: 0,
+        }
       }
+      const cards = document.getElementById('home-cards-list')
+      if (cards) {
+        return {
+          timelineItems: 0,
+          cardsItems: cards.querySelectorAll('.sakura-post-card').length,
+        }
+      }
+      return {}
     },
     resolveScrollAfterMount(url, { scrollTop = true, scrollY = 0 } = {}) {
       if (!isHomeListPath(url)) return null

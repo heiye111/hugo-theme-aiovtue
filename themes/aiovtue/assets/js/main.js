@@ -20,6 +20,8 @@ import {
   initHomePaginationScroll,
   initHomePostListScrollAnimation,
   initHomeTimelineLoadMore,
+  initHomeCardsLoadMore,
+  refreshMobileCardsListPage,
   cleanupHomeObservers,
 } from './home.js'
 import { customizeTwikooCommentForm, observeTwikooCommentForm, cleanupTwikooFormObserver } from './twikoo-form.js'
@@ -59,6 +61,8 @@ function mountPage() {
   initHomePaginationScroll()
   initHomePostListScrollAnimation()
   initHomeTimelineLoadMore()
+  initHomeCardsLoadMore()
+  refreshMobileCardsListPage()
   initPostToc()
   initPageComments({
     onTwikooReady: () => {
@@ -83,6 +87,7 @@ function mountPage() {
   void initSearchPage().catch((err) => console.warn('[search]', err))
   initEnvelope()
   initEnvelopeDanmaku()
+  window.SignatureWidget?.boot()
   bindCopyYmlBtn()
   refreshHomeNavbar?.()
   refreshMobileNavbarCollapse?.()

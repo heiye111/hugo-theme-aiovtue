@@ -1,11 +1,17 @@
 {{ define "main" }}
 {{ $layout := .Site.Params.home.layout | default "cards" }}
 {{ if not (in (slice "cards" "timeline") $layout) }}{{ $layout = "cards" }}{{ end }}
+{{ $mobileCardsLayout := .Site.Params.home.mobileCardsLayout | default "stack" }}
+{{ if not (in (slice "stack" "list") $mobileCardsLayout) }}{{ $mobileCardsLayout = "stack" }}{{ end }}
+{{ $mobileCardsPaging := .Site.Params.home.mobileCardsPaging | default "pagination" }}
+{{ if not (in (slice "pagination" "loadMore") $mobileCardsPaging) }}{{ $mobileCardsPaging = "pagination" }}{{ end }}
+{{ $mobileCardsBatchSize := .Site.Params.home.mobileCardsBatchSize | default 10 }}
+{{ $mobileCardsList := partial "mobile-cards-list-enabled.html" . }}
 {{ $posts := where .Site.RegularPages "Section" "in" (slice "posts" "excalidraw") }}
 {{ $posts = partial "posts-sorted.html" (dict "Pages" $posts) }}
 <section class="sakura-home">
   {{- partial "hero.html" . -}}
-  <div class="sakura-home-layout is-layout-{{ $layout }}" id="home-posts" data-home-layout="{{ $layout }}">
+  <div class="sakura-home-layout is-layout-{{ $layout }}{{ if $mobileCardsList }} is-mobile-cards-list{{ end }}" id="home-posts" data-home-layout="{{ $layout }}"{{ if eq $layout "cards" }} data-mobile-cards-layout="{{ $mobileCardsLayout }}" data-mobile-cards-paging="{{ $mobileCardsPaging }}"{{ end }}>
     {{ if eq $layout "cards" }}
     <div class="home-layout-notice" id="home-layout-notice">
       {{- partial "notice-board.html" . -}}
@@ -14,12 +20,43 @@
     <div class="sakura-post-list" id="home-post-list">
       {{ if eq $layout "cards" }}
       {{ $paginator := .Paginate $posts 10 }}
-      <div class="post-list-container post-list-container--cards">
+      <div class="post-list-container post-list-container--cards{{ if $mobileCardsList }} post-list-container--mobile-list{{ end }}" id="home-cards-list">
         {{ range $index, $page := $paginator.Pages }}
           {{- partial "post-card.html" (dict "Page" $page "Site" $.Site "Index" $index) -}}
         {{ end }}
       </div>
       {{- partial "pagination.html" . -}}
+      {{ if and (eq $mobileCardsPaging "loadMore") (eq $paginator.PageNumber 1) }}
+      {{ $remaining := after (len $paginator.Pages) $posts }}
+      {{ if $remaining }}
+      {{ $morePosts := slice }}
+      {{ range $index, $page := $remaining }}
+        {{ $showDate := $page.Lastmod }}
+        {{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
+        {{ $cover := partial "post-cover.html" $page }}
+        {{ $coverSrc := $cover }}
+        {{ if and $cover (not (or (hasPrefix $cover "http://") (hasPrefix $cover "https://") (hasPrefix $cover "//"))) }}
+          {{ $coverSrc = $cover | relURL }}
+        {{ end }}
+        {{ $lower := lower $cover }}
+        {{ $cats := $page.Params.categories | default slice }}
+        {{ if and $cats (not (reflect.IsSlice $cats)) }}{{ $cats = slice $cats }}{{ end }}
+        {{ $morePosts = $morePosts | append (dict
+          "title" $page.Title
+          "url" $page.RelPermalink
+          "date" ($showDate.Format "2006-01-02")
+          "cover" $coverSrc
+          "coverIsVideo" (or (hasSuffix $lower ".mp4") (hasSuffix $lower ".webm") (hasSuffix $lower ".ogg"))
+          "categories" $cats
+          "pinned" (default false $page.Params.pinned)
+          "index" (add (len $paginator.Pages) $index)
+        ) }}
+      {{ end }}
+      <script type="application/json" id="home-cards-more-data">{{ $morePosts | jsonify }}</script>
+      <div class="home-cards-scroll-sentinel" id="home-cards-scroll-sentinel" data-batch-size="{{ $mobileCardsBatchSize }}" aria-hidden="true"></div>
+      <p class="home-cards-load-status" id="home-cards-load-status" hidden aria-live="polite"></p>
+      {{ end }}
+      {{ end }}
       {{ else }}
       {{ $batchSize := .Site.Params.home.timelineBatchSize | default 10 }}
       {{ $visible := first $batchSize $posts }}

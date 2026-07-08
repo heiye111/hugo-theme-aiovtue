@@ -38,6 +38,8 @@
 
 {{- end -}}
 
+<link rel="stylesheet" data-sakura-page-style="signature" href="{{ `/signature/signature.css` | relURL }}">
+
 {{- if or (eq .Section "moments") (eq .Layout "moments") -}}
 
   {{- partial "stylesheet.html" (dict "name" "css/moments.scss" "key" "moments") -}}

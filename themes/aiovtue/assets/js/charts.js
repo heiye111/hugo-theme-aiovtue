@@ -2,6 +2,7 @@
 import { registerPageCleanup } from './page-cleanup.js'
 import { preservePjaxHistoryState, parseJsonData } from './utils.js'
 import { initLazyImages } from './lazy-images.js'
+import { refreshMobileCardsListPage } from './home.js'
 
 const ECHARTS_SCRIPT_URL = 'https://cdn.jsdelivr.net/npm/echarts@4.9.0/dist/echarts.min.js'
 let echartsScriptPromise = null
@@ -122,6 +123,7 @@ function initCategoriesPage(echartsLib, textColor, primary) {
     })
     updatePostCardsLayout()
     initLazyImages(postSection)
+    refreshMobileCardsListPage()
   }
 
   const selectCategory = (categoryKey) => {
@@ -225,6 +227,7 @@ function initTagsPage(echartsLib, textColor, primary) {
     })
     updateFilteredPostCards(postItems)
     initLazyImages(postSection)
+    refreshMobileCardsListPage()
   }
 
   const selectTag = (tagKey) => {

@@ -17,7 +17,7 @@
 <meta name="description" content="{{ $desc }}">
 {{- with .Site.Params.pjax -}}
 {{- if .enable -}}
-<meta name="sakura-pjax" content="1" data-fade="{{ default 200 .fadeDuration }}" data-mount-delay="{{ default 120 .mountDelay }}">
+<meta name="sakura-pjax" content="1" data-fade="{{ default 200 .fadeDuration }}" data-mount-delay="{{ default 120 .mountDelay }}" data-loader="{{ if isset . `loader` }}{{ if .loader }}1{{ else }}0{{ end }}{{ else }}1{{ end }}">
 {{- end -}}
 {{- end -}}
 {{- if partial "mouse-enabled.html" . -}}

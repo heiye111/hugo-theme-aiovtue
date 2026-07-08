@@ -4,7 +4,8 @@
 {{ $homeLayout := .Site.Params.home.layout | default "cards" }}
 {{ if not (in (slice "cards" "timeline") $homeLayout) }}{{ $homeLayout = "cards" }}{{ end }}
 {{ $listArchives := eq $homeLayout "timeline" }}
-<article class="sakura-page sakura-taxonomy-page sakura-categories-page{{ if $listArchives }} is-list-archives{{ end }}">
+{{ $mobileCardsList := partial "mobile-cards-list-enabled.html" . }}
+<article class="sakura-page sakura-taxonomy-page sakura-categories-page{{ if $listArchives }} is-list-archives{{ end }}{{ if $mobileCardsList }} is-mobile-cards-list{{ end }}">
   {{- partial "page-header.html" . -}}
   <div class="sakura-page-content">
     <p class="sakura-taxonomy-count">共 {{ len .Data.Terms }} 个分类</p>
@@ -30,7 +31,7 @@
       ) -}}
       {{ else }}
       <div class="sakura-post-list">
-        <div class="post-list-container" id="categories-post-list">
+        <div class="post-list-container post-list-container--cards{{ if $mobileCardsList }} post-list-container--mobile-list{{ end }}" id="categories-post-list">
           {{ range $index, $page := $posts }}
           {{ $cats := slice }}
           {{ range ($page.GetTerms "categories") }}
