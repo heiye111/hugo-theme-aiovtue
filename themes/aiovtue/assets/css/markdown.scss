@@ -282,6 +282,30 @@ html.dark {
   font-size: var(--sakura-post-font-size, 1rem);
 }
 
+.sakura-post .markdown-body.prose.sakura-post-content {
+  p,
+  li {
+    text-align: justify;
+    text-justify: inter-ideograph;
+    text-align-last: left;
+  }
+
+  @supports (text-justify: inter-character) {
+    p,
+    li {
+      text-justify: inter-character;
+    }
+  }
+
+  blockquote p,
+  .sakura-table-wrap p,
+  td p,
+  th p {
+    text-align: left;
+    text-align-last: left;
+  }
+}
+
 .markdown-body.prose {
   max-width: none;
   font-family: var(--va-font-serif);

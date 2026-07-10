@@ -1862,11 +1862,31 @@ html.dark .sakura-post-card {
 .sakura-post-date__inner {
   display: inline-flex;
   align-items: center;
+  gap: 4px;
   white-space: nowrap;
   vertical-align: top;
+  line-height: 1;
 }
-.sakura-post-date__icon { margin-right: 4px; font-size: 1em; }
-.sakura-post-date__label { margin-right: 4px; }
+.sakura-post-date__icon,
+iconify-icon.sakura-post-date__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  margin: 0;
+  font-size: 1em;
+  line-height: 1;
+  vertical-align: middle;
+}
+.sakura-post-date__label {
+  margin: 0;
+  line-height: 1;
+}
+.sakura-post-date time {
+  line-height: 1;
+}
 
 .sakura-post-title,
 .sakura-post-card__title {
@@ -3756,6 +3776,10 @@ html.dark {
       line-height: 1.2;
     }
 
+    .sakura-post-date time {
+      line-height: 1.2;
+    }
+
     .sakura-post-card > .sakura-post-pin.is-pin-flip {
       top: 6px;
       right: 6px;
@@ -3859,12 +3883,14 @@ html.dark {
   }
   .sakura-post .markdown-body.prose {
     --va-code-mobile-margin-x: 0;
-    overflow-wrap: anywhere;
-    word-break: break-word;
 
     p,
     li,
-    blockquote,
+    blockquote {
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+
     a {
       overflow-wrap: anywhere;
       word-break: break-word;

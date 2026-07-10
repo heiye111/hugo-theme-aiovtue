@@ -1,4 +1,5 @@
 import { mountMomentCommentPanel } from './comments.js'
+import { formatRelativeTime } from './utils.js'
 
 function primeMomentVideoThumb(video) {
   if (!video || video.dataset.thumbReady === '1') return
@@ -19,31 +20,11 @@ function bindMoments(root) {
   root.querySelectorAll('.travel-moment__photo video, .moments-card__photo video').forEach(primeMomentVideoThumb)
 }
 
-function formatMomentsCardTime(isoDate, absoluteLabel) {
-  if (!isoDate) return absoluteLabel
-
-  const date = new Date(isoDate)
-  if (Number.isNaN(date.getTime())) return absoluteLabel
-
-  const diffMs = Date.now() - date.getTime()
-  const sevenDaysMs = 7 * 24 * 60 * 60 * 1000
-  if (diffMs < 0 || diffMs > sevenDaysMs) return absoluteLabel
-
-  const diffMinutes = Math.floor(diffMs / 60000)
-  if (diffMinutes < 1) return '刚刚'
-  if (diffMinutes < 60) return `${diffMinutes} 分钟前`
-
-  const diffHours = Math.floor(diffMinutes / 60)
-  if (diffHours < 24) return `${diffHours} 小时前`
-
-  const diffDays = Math.floor(diffHours / 24)
-  return `${diffDays} 天前`
-}
-
 function initMomentsTimes(root) {
   root.querySelectorAll('.moments-card__meta time[datetime], .travel-moment__footer time[datetime]').forEach((timeEl) => {
     const absolute = timeEl.dataset.absolute || timeEl.textContent.trim()
-    const formatted = formatMomentsCardTime(timeEl.getAttribute('datetime'), absolute)
+    const isDateOnly = timeEl.hasAttribute('data-date-only')
+    const formatted = formatRelativeTime(timeEl.getAttribute('datetime'), absolute, isDateOnly)
     timeEl.textContent = formatted
     if (formatted !== absolute) {
       timeEl.title = absolute

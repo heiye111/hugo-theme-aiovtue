@@ -31,8 +31,7 @@
       {{ if $remaining }}
       {{ $morePosts := slice }}
       {{ range $index, $page := $remaining }}
-        {{ $showDate := $page.Lastmod }}
-        {{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
+        {{ $modifiedDate := partial "post-modified-date.html" $page }}
         {{ $cover := partial "post-cover.html" $page }}
         {{ $coverSrc := $cover }}
         {{ if and $cover (not (or (hasPrefix $cover "http://") (hasPrefix $cover "https://") (hasPrefix $cover "//"))) }}
@@ -44,7 +43,9 @@
         {{ $morePosts = $morePosts | append (dict
           "title" $page.Title
           "url" $page.RelPermalink
-          "date" ($showDate.Format "2006-01-02")
+          "date" $modifiedDate.display
+          "dateTime" $modifiedDate.datetime
+          "dateOnly" $modifiedDate.dateOnly
           "cover" $coverSrc
           "coverIsVideo" (or (hasSuffix $lower ".mp4") (hasSuffix $lower ".webm") (hasSuffix $lower ".ogg"))
           "categories" $cats
@@ -70,12 +71,14 @@
         {{ if $remaining }}
         {{ $morePosts := slice }}
         {{ range $index, $page := $remaining }}
-          {{ $showDate := $page.Lastmod }}
-          {{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
+          {{ $modifiedDate := partial "post-modified-date.html" $page }}
+          {{ $showDate := $modifiedDate.showDate }}
           {{ $morePosts = $morePosts | append (dict
             "title" $page.Title
             "url" $page.RelPermalink
-            "date" ($showDate.Format "2006-01-02")
+            "date" $modifiedDate.display
+            "dateTime" $modifiedDate.datetime
+            "dateOnly" $modifiedDate.dateOnly
             "dateYear" ($showDate.Format "2006")
             "dateMd" ($showDate.Format "01-02")
             "excerpt" ($page.Description | default $page.Summary | plainify | truncate 160)

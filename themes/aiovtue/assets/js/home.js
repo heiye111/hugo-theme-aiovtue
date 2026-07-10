@@ -1,31 +1,10 @@
 
 import { applyTargetScroll, readHomeListScrollMeta } from './page-nav.js'
 import { registerPageCleanup } from './page-cleanup.js'
-import { escapeHtml, parseJsonData } from './utils.js'
+import { escapeHtml, parseJsonData, formatRelativeTime } from './utils.js'
 import { initLazyImages } from './lazy-images.js'
 
 const MOBILE_CARDS_MQ = '(max-width: 768px)'
-
-function formatHomeMobileListTime(isoDate, absoluteLabel) {
-  if (!isoDate) return absoluteLabel
-
-  const date = new Date(isoDate)
-  if (Number.isNaN(date.getTime())) return absoluteLabel
-
-  const diffMs = Date.now() - date.getTime()
-  const sevenDaysMs = 7 * 24 * 60 * 60 * 1000
-  if (diffMs < 0 || diffMs > sevenDaysMs) return absoluteLabel
-
-  const diffMinutes = Math.floor(diffMs / 60000)
-  if (diffMinutes < 1) return '刚刚'
-  if (diffMinutes < 60) return `${diffMinutes} 分钟前`
-
-  const diffHours = Math.floor(diffMinutes / 60)
-  if (diffHours < 24) return `${diffHours} 小时前`
-
-  const diffDays = Math.floor(diffHours / 24)
-  return `${diffDays} 天前`
-}
 
 function initHomeMobileListTimes(root) {
   const roots = root
@@ -34,7 +13,8 @@ function initHomeMobileListTimes(root) {
   roots.forEach((scope) => {
     scope.querySelectorAll('.sakura-post-card .sakura-post-date time[datetime]').forEach((timeEl) => {
       const absolute = timeEl.textContent.trim()
-      const formatted = formatHomeMobileListTime(timeEl.getAttribute('datetime'), absolute)
+      const isDateOnly = timeEl.hasAttribute('data-date-only')
+      const formatted = formatRelativeTime(timeEl.getAttribute('datetime'), absolute, isDateOnly)
       timeEl.textContent = formatted
       if (formatted !== absolute) {
         timeEl.title = `编辑于${absolute}`
@@ -295,7 +275,7 @@ function createHomeTimelineItem(post) {
           <p class="home-timeline-card__excerpt">${escapeHtml(post.excerpt || '')}</p>
         </a>
       </div>
-      <time class="home-timeline-card__date" datetime="${escapeHtml(post.date || '')}" title="编辑于${escapeHtml(post.date || '')}">
+      <time class="home-timeline-card__date" datetime="${escapeHtml(post.dateTime || post.date || '')}"${post.dateOnly ? ' data-date-only="true"' : ''} title="编辑于${escapeHtml(post.date || '')}">
         <span class="home-timeline-card__date-year">${escapeHtml(post.dateYear || '')}</span>
         <span class="home-timeline-card__date-md">${escapeHtml(post.dateMd || '')}</span>
       </time>
@@ -351,7 +331,7 @@ function createHomeCardsItem(post) {
           <span class="sakura-post-date__inner" title="编辑于${escapeHtml(post.date || '')}">
             <iconify-icon icon="mdi:clock-outline" class="sakura-icon sakura-post-date__icon" aria-hidden="true"></iconify-icon>
             <span class="sakura-post-date__label">编辑于</span>
-            <time datetime="${escapeHtml(post.date || '')}" itemprop="dateModified">${escapeHtml(post.date || '')}</time>
+            <time datetime="${escapeHtml(post.dateTime || post.date || '')}"${post.dateOnly ? ' data-date-only="true"' : ''} itemprop="dateModified">${escapeHtml(post.date || '')}</time>
           </span>
         </div>
         <h2 class="sakura-post-title sakura-post-card__title">

@@ -1,8 +1,10 @@
 {{ $page := .Page }}
 {{ $cover := partial "post-cover.html" $page }}
 {{ $pos := mod (.Index | default 0) 2 }}
-{{ $showDate := $page.Lastmod }}
-{{ if $showDate.IsZero }}{{ $showDate = $page.Date }}{{ end }}
+{{ $modifiedDate := partial "post-modified-date.html" $page }}
+{{ $dateDisplay := $modifiedDate.display }}
+{{ $dateTime := $modifiedDate.datetime }}
+{{ $dateOnly := $modifiedDate.dateOnly }}
 <article class="sakura-post-card {{ if eq $pos 0 }}left{{ else }}right{{ end }}{{ if $page.Params.pinned }} is-pinned{{ end }}">
   {{- partial "post-pinned-badge.html" (dict "Page" $page) -}}
   <a class="sakura-post-card__cover aspect-video" href="{{ $page.RelPermalink }}">
@@ -11,10 +13,10 @@
   <div class="sakura-post-card__content has-cover">
     <div class="sakura-post-card-info">
       <div class="sakura-post-date post-date">
-        <span class="sakura-post-date__inner" title="编辑于{{ $showDate.Format `2006-01-02` }}">
+        <span class="sakura-post-date__inner" title="编辑于{{ $dateDisplay }}">
           <iconify-icon icon="mdi:clock-outline" class="sakura-icon sakura-post-date__icon" aria-hidden="true"></iconify-icon>
           <span class="sakura-post-date__label">编辑于</span>
-          <time datetime="{{ $showDate.Format `2006-01-02` }}" itemprop="dateModified">{{ $showDate.Format `2006-01-02` }}</time>
+          <time datetime="{{ $dateTime }}"{{ if $dateOnly }} data-date-only="true"{{ end }} itemprop="dateModified">{{ $dateDisplay }}</time>
         </span>
       </div>
       <h2 class="sakura-post-title sakura-post-card__title">
