@@ -3,7 +3,13 @@
 参考butterfly、sakura等，基于**Hugo** 的静态博客。
 欢迎前往示例网站参观：[AIOVTUE-XUE](https://daily.yybb.us)
 
-# 更新说明
+由于主题多次更新，各更新文档如下，有需要可以访问
+- [主题发布-1.0](https://daily.yybb.us/posts/hugo-theme/aiovtue/hugotheme-aiovtue/)
+- [主题首次大更新-1.5](https://daily.yybb.us/posts/hugo-theme/aiovtue/hugo-aiovtueupdate/)
+- [主题小更新-1.6](https://daily.yybb.us/posts/hugo-theme/aiovtue/theme-aiovtue-up2/)
+- [主题更新-2.0](https://daily.yybb.us/posts/hugo-theme/aiovtue/update-26717/)
+
+# 更新说明-1.5
 
 新增动态页面，双样式  
 文章新增画板（excalidraw）样式  
@@ -25,11 +31,28 @@
 新增页脚出友链显示功能  
 留言页增加弹幕功能  
 
+# 更新说明2.0
+新增主页文章列表样式-list模式，包含单双两种样式  
+优化站点显示样式-grid模式，即网格背景  
+优化音乐悬浮球收纳吸边  
+新增twikoo文章访问数量统计功能，在文章详情页顶部  
+新增友链页面每个分组独立设置显示样式  
+新增周刊功能支持，需手动开启  
+修复文章详情页顶部文字和图标对不齐的问题  
+优化移动端card模式下显示样式  
+修复文章发布时间计算问题，时区问题，影响不大  
+优化页脚底部排列顺序  
+页脚增加分隔线  
+电脑端增加顶栏自动隐藏功能  
+电脑端顶栏增加固定（随页面移出屏幕）效果  
+
 **首次运行请使用管理员身份打开powershell运行pnpm install**
 
 ## 博客预览
 主页
 ![](https://pic1.imgdb.cn/item/6a3938ff4a893629d992bb61.png)
+![](https://r2tc.20030327.xyz/file/%e5%8d%9a%e5%ae%a2/%e6%96%87%e7%ab%a0/1783701143321_1783701105376.png)
+![](https://r2tc.20030327.xyz/file/%e5%8d%9a%e5%ae%a2/%e6%96%87%e7%ab%a0/1783701137378_1783701080272.png)
 ---
 文章
 ![](https://pic1.imgdb.cn/item/6a3938fe4a893629d992bb5f.png)
