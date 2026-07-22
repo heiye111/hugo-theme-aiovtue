@@ -1,5 +1,0 @@
-{
-  "builders": {
-    "installCommand": "pnpm install --ignore-scripts=false"
-  }
-}
